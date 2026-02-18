@@ -1,9 +1,7 @@
 <script>
-  import { onMount } from "svelte";
   import Element from "./Element.svelte";
   import { componentModules } from "./catalog/component-modules.svelte.js";
   import { createReactiveProps } from "./reactive-props.svelte";
-  import { set } from "lodash-es";
 
   let { element = {}, states = $bindable({}) } = $props();
   // $inspect("...states", states);
