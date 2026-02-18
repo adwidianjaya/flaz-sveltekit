@@ -1,11 +1,10 @@
 <script>
   import Element from "./Element.svelte";
 
-  const { structure } = $props();
-  // $inspect("...structure", structure);
-  // $inspect("...structure.states", structure.states);
+  let { states = $bindable({}), elements = [] } = $props();
+  // $inspect("...Renderer ...states", states);
 </script>
 
-{#each structure?.elements || [] as element}
-  <Element {element} bind:states={structure.states} />
+{#each elements || [] as element}
+  <Element {element} bind:states />
 {/each}

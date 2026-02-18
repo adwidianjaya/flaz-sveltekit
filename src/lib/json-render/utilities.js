@@ -1,4 +1,4 @@
-import { set } from "lodash-es";
+import { merge, set } from "lodash-es";
 
 export const initDefinition = () => {
   return {
@@ -29,14 +29,23 @@ export const updateDefinitionByOperationString = ({
   if (!operation) return definition;
 
   if (operation.path.startsWith("$states")) {
-    if (operation.op === "remove") {
-      // do nothing
+    const path = operation.path.split("$states.").join("").trim();
+    // console.log({ path });
+    if (path === "$states") {
+      if (operation.op === "remove") {
+        definition.states = {};
+      } else {
+        definition.states = operation.value || {};
+      }
     } else {
-      set(
-        definition.states,
-        operation.path.split("$states.").join(""),
-        operation.value,
-      );
+      if (operation.op === "remove") {
+        // do nothing
+        if (definition.states[path]) {
+          delete definition.states[path];
+        }
+      } else {
+        set(definition.states, path, operation.value);
+      }
     }
   } else if (operation.path.startsWith("$elements")) {
     if (operation.op === "remove") {
@@ -74,7 +83,10 @@ const convertChildToRenderStructure = ({ element, definition }) => {
   return renderStructure;
 };
 
-export const convertDefinitionToRenderStructure = ({ definition }) => {
+export const convertDefinitionToRenderSchema = ({
+  definition,
+  initialStates = {},
+}) => {
   if (!definition.root || !definition.elements[definition.root]) {
     return {};
   }
@@ -86,7 +98,7 @@ export const convertDefinitionToRenderStructure = ({ definition }) => {
         definition,
       }),
     ],
-    states: JSON.parse(JSON.stringify(definition.states)),
+    states: merge(JSON.parse(JSON.stringify(definition.states)), initialStates),
   };
 
   return render;

@@ -3,7 +3,7 @@
   import {
     initDefinition,
     updateDefinitionByOperationString,
-    convertDefinitionToRenderStructure,
+    convertDefinitionToRenderSchema,
   } from "$lib/json-render/utilities";
   import Renderer from "$lib/json-render/Renderer.svelte";
   import LogViewer from "./LogViewer.svelte";
@@ -14,11 +14,11 @@
   // $inspect("...prompt", prompt);
   let definition = $state(initDefinition());
   // $inspect("...definition", definition);
-  // let structure = $state({
+  // let schema = $state({
   //   elements: [],
   //   states: {},
   // });
-  let structure = $state({
+  let schema = $state({
     elements: [
       {
         type: "Card",
@@ -53,8 +53,8 @@
       },
     },
   });
-  const structureStringified = $derived(JSON.stringify(structure, null, 2));
-  // $inspect("...structure", structure);
+  const schemaStringified = $derived(JSON.stringify(schema, null, 2));
+  // $inspect("...schema", schema);
   let messages = $state([]);
   // $inspect("...messages", messages);
 
@@ -93,9 +93,9 @@
             operationString: lastLine,
             definition,
           });
-          structure = convertDefinitionToRenderStructure({
+          schema = convertDefinitionToRenderSchema({
             definition,
-            initialStates: structure.states,
+            initialStates: schema.states,
           });
 
           lastLine = "";
@@ -107,9 +107,9 @@
       operationString: lastLine,
       definition,
     });
-    structure = convertDefinitionToRenderStructure({
+    schema = convertDefinitionToRenderSchema({
       definition,
-      initialStates: structure.states,
+      initialStates: schema.states,
     });
   };
 </script>
@@ -129,7 +129,7 @@
             "whitespace-pre font-mono text-xs",
             "text-gray-400 hover:text-gray-300 transition duration-100",
           ]}>
-          {structureStringified}
+          {schemaStringified}
         </div>
       </div>
 
@@ -166,7 +166,7 @@
         "border-b border-t border-l border-gray-700",
       ]}>
       <div class="w-full h-full text-xs px-3 py-2 overflow-scroll">
-        <Renderer {structure} />
+        <Renderer bind:states={schema.states} elements={schema.elements} />
       </div>
 
       <LogViewer {messages} />

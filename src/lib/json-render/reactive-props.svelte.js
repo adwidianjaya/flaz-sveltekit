@@ -59,11 +59,11 @@ export function createReactiveProps(
         }
 
         // If bound, update the page state.
-        // console.log("...set", newValue, bindingPath);
+        console.log("...set", newValue, bindingPath);
         set(states || {}, bindingPath, newValue);
       },
-      enumerable: true, // makes the property visible when enumerating the object
-      configurable: true, // allows the property to be changed or deleted
+      enumerable: true,
+      configurable: true,
     });
   }
 

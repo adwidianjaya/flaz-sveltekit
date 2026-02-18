@@ -12,7 +12,7 @@
         value: z.string().optional(),
       })
       .toJSONSchema(),
-    events: ["oninput"],
+    // events: ["oninput"],
   };
 </script>
 

@@ -11,7 +11,9 @@
       `/src/lib/json-render/catalog/components/${element?.type}.svelte`
     ],
   );
-  let reactiveProps = createReactiveProps(element?.props || {}, states);
+  let reactiveProps = $derived.by(() =>
+    createReactiveProps(element?.props || {}, states),
+  );
   // $inspect("...reactiveProps", reactiveProps);
 </script>
 
