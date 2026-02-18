@@ -17,22 +17,24 @@
 </script>
 
 <script>
-  let {
-    label = "",
-    disabled = false,
-    placeholder = "",
-    value = $bindable(),
+  const {
+    props = $bindable({
+      label: "",
+      disabled: false,
+      placeholder: "",
+      value: "",
+    }),
   } = $props();
 </script>
 
 <div class="pt-4">
   <label class="floating-label">
-    <span>{label}</span>
+    <span>{props.label}</span>
     <input
       type="text"
       class="input w-full"
-      {disabled}
-      bind:value
-      placeholder={placeholder || label || ""} />
+      disabled={props.disabled}
+      bind:value={props.value}
+      placeholder={props.placeholder || props.label || ""} />
   </label>
 </div>

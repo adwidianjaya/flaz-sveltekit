@@ -3,10 +3,9 @@
 
   const { structure } = $props();
   // $inspect("...structure", structure);
-
-  let pageStates = $derived(structure.states || {});
+  // $inspect("...structure.states", structure.states);
 </script>
 
 {#each structure?.elements || [] as element}
-  <Element {element} bind:pageStates />
+  <Element {element} bind:states={structure.states} />
 {/each}

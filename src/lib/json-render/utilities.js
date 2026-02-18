@@ -1,5 +1,4 @@
-import color from "picocolors";
-import { get, isObject, set } from "lodash-es";
+import { set } from "lodash-es";
 
 export const initDefinition = () => {
   return {
@@ -29,27 +28,27 @@ export const updateDefinitionByOperationString = ({
   // );
   if (!operation) return definition;
 
-  if (operation.path.startsWith("/states")) {
+  if (operation.path.startsWith("$states")) {
     if (operation.op === "remove") {
       // do nothing
     } else {
       set(
         definition.states,
-        operation.path.split("/states/").join("").split("/").join("."),
+        operation.path.split("$states.").join(""),
         operation.value,
       );
     }
-  } else if (operation.path.startsWith("/elements")) {
+  } else if (operation.path.startsWith("$elements")) {
     if (operation.op === "remove") {
-      delete definition.elements[operation.path.split("/elements/").join("")];
+      delete definition.elements[operation.path.split("$elements.").join("")];
     } else if (operation.op === "replace") {
-      definition.elements[operation.path.split("/elements/").join("")] =
+      definition.elements[operation.path.split("$elements.").join("")] =
         operation.value;
     } else if (operation.op === "add") {
-      const elementId = operation.path.split("/elements/").join("");
+      const elementId = operation.path.split("$elements.").join("");
       definition.elements[elementId] = operation.value;
     }
-  } else if (operation.path.startsWith("/root")) {
+  } else if (operation.path.startsWith("$root")) {
     definition.root = operation.value;
   }
 

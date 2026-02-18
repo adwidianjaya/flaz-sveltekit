@@ -1,4 +1,14 @@
 <script>
+  // if (import.meta.hot) {
+  //   // Prevent full reload, see https://github.com/vitejs/vite/issues/5763#issuecomment-1974235806
+  //   import.meta.hot.on("vite:beforeFullReload", payload => {
+  //     payload.path = "(WORKAROUND).html";
+  //   });
+  // }
+
+  import { dev } from "$app/environment";
+  import { RenderScan } from "svelte-render-scan";
+
   import "../app.css";
   import favicon from "$lib/assets/favicon.svg";
 
@@ -18,3 +28,7 @@
 
 <Toaster position="bottom-center" richColors closeButton />
 <PageErrorInDevelopment />
+
+{#if dev}
+  <RenderScan duration={500} initialEnabled={false} />
+{/if}

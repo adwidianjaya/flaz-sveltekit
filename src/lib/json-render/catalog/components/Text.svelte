@@ -15,18 +15,23 @@
 </script>
 
 <script>
-  const { text = "", level, ...props } = $props();
+  const {
+    props = $bindable({
+      text: "",
+      level: "",
+    }),
+  } = $props();
 </script>
 
 <div
   class={[
     "mt-2",
-    level === "h1" && "text-3xl",
-    level === "h2" && "text-2xl",
-    level === "h3" && "text-xl",
-    level === "h4" && "text-lg",
-    level === "h5" && "text-base",
-    level === "h6" && "text-sm",
-    level === "p" && "text-sm",
+    props.level === "h1" && "text-3xl",
+    props.level === "h2" && "text-2xl",
+    props.level === "h3" && "text-xl",
+    props.level === "h4" && "text-lg",
+    props.level === "h5" && "text-base",
+    props.level === "h6" && "text-sm",
+    props.level === "p" && "text-sm",
     props.class,
-  ]}>{text}</div>
+  ]}>{props.text}</div>

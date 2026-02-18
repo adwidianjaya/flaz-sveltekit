@@ -15,10 +15,20 @@
 </script>
 
 <script>
-  const { label = "", disabled = false, oninput } = $props();
+  const {
+    props = $bindable({
+      label: "",
+      disabled: false,
+      value: "",
+    }),
+  } = $props();
 </script>
 
 <label class="floating-label">
-  <span>{label}</span>
-  <textarea class="textarea" placeholder="Bio" {disabled} {oninput}></textarea>
+  <span>{props.label}</span>
+  <textarea
+    class="textarea"
+    placeholder="Bio"
+    disabled={props.disabled}
+    bind:value={props.value}></textarea>
 </label>

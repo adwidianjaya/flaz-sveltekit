@@ -19,28 +19,29 @@
 
 <script>
   const {
-    title = "",
-    description = "",
-    maxWidth,
-    centered = false,
+    props = $bindable({
+      title: "",
+      description: "",
+      maxWidth: "md",
+      centered: false,
+    }),
     children,
-    ...props
   } = $props();
 </script>
 
 <div
   class={[
-    "px-4 py-3 rounded border border-gray-600",
-    maxWidth === "sm" && "max-w-sm",
-    maxWidth === "md" && "max-w-md",
-    maxWidth === "lg" && "max-w-lg",
-    maxWidth === "xl" && "max-w-xl",
-    maxWidth === "2xl" && "max-w-2xl",
-    maxWidth === "3xl" && "max-w-3xl",
-    centered && "mx-auto",
+    "px-4 py-3 rounded border border-gray-600 bg-gray-700",
+    props.maxWidth === "sm" && "max-w-sm",
+    props.maxWidth === "md" && "max-w-md",
+    props.maxWidth === "lg" && "max-w-lg",
+    props.maxWidth === "xl" && "max-w-xl",
+    props.maxWidth === "2xl" && "max-w-2xl",
+    props.maxWidth === "3xl" && "max-w-3xl",
+    props.centered && "mx-auto",
     props.class,
   ]}>
-  <div class="text-lg">{title}</div>
-  <div class="text-sm">{description}</div>
+  <div class="text-lg">{props.title}</div>
+  <div class="text-sm">{props.description}</div>
   {@render children?.()}
 </div>

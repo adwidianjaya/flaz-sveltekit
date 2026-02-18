@@ -20,6 +20,7 @@
 		"lodash-es": "^4.17.23",
 		"svelte": "^5.49.2",
 		"svelte-adapter-bun": "^1.0.1",
+		"svelte-render-scan": "^1.1.0",
 		"tailwindcss": "^4.1.18",
 		"vite": "^7.3.1"
 	},

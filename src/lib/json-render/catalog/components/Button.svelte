@@ -16,8 +16,15 @@
 </script>
 
 <script>
-  const { label = "", disabled = false, onclick, ...props } = $props();
+  const {
+    props = $bindable({
+      label: "",
+      disabled: false,
+      onclick,
+    }),
+  } = $props();
 </script>
 
-<button class={["btn", disabled && "btn-disabled", props.class]} {onclick}
-  >{label}</button>
+<button
+  class={["btn", props.disabled && "btn-disabled", props.class]}
+  onclick={props.onclick}>{props.label}</button>

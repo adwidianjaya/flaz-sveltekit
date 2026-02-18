@@ -4,8 +4,9 @@
     initDefinition,
     updateDefinitionByOperationString,
     convertDefinitionToRenderStructure,
-  } from "$lib/utilities/json-render";
-  import Renderer from "$lib/catalog/Renderer.svelte";
+  } from "$lib/json-render/utilities";
+  import Renderer from "$lib/json-render/Renderer.svelte";
+  import LogViewer from "./LogViewer.svelte";
 
   let prompt = $state(
     "create form, input name, and output simple greeting. The greeting should be in the form of 'Hello, {name}!' with orange text.",
@@ -13,7 +14,11 @@
   // $inspect("...prompt", prompt);
   let definition = $state(initDefinition());
   // $inspect("...definition", definition);
-  let structure = $state.raw({
+  // let structure = $state({
+  //   elements: [],
+  //   states: {},
+  // });
+  let structure = $state({
     elements: [
       {
         type: "Card",
@@ -28,13 +33,13 @@
             type: "ShortText",
             props: {
               label: "Name",
-              value: "$/states/form/name",
+              value: "$states.form.name",
             },
           },
           {
             type: "Text",
             props: {
-              text: "${/states/form/name ? 'Hello, ' + /states/form/name + '!' : ''}",
+              text: "{$states.form.name ? 'Hello, ' + $states.form.name + '!' : ''}",
               level: "p",
               class: "text-orange-500 font-bold",
             },
@@ -48,11 +53,11 @@
       },
     },
   });
+  const structureStringified = $derived(JSON.stringify(structure, null, 2));
   // $inspect("...structure", structure);
-  let logOutput = $state(null);
-  // $inspect("...logOutput", logOutput);
   let messages = $state([]);
   // $inspect("...messages", messages);
+
   const sendPrompt = async () => {
     let body = JSON.stringify({ prompt });
     prompt = "";
@@ -90,6 +95,7 @@
           });
           structure = convertDefinitionToRenderStructure({
             definition,
+            initialStates: structure.states,
           });
 
           lastLine = "";
@@ -103,28 +109,33 @@
     });
     structure = convertDefinitionToRenderStructure({
       definition,
+      initialStates: structure.states,
     });
-
-    setTimeout(() => {
-      logOutput.scrollTo({
-        top: logOutput.scrollHeight, // Scrolls to the maximum height of the content
-        behavior: "smooth", // Enables smooth scrolling animation
-      });
-      // console.log("...logOutput.scrollHeight", logOutput.scrollHeight);
-    }, 500);
   };
 </script>
 
-<div class="w-full h-dvh flex flex-col">
-  <div class="w-full">
-    <div class="pt-3 pb-2 px-4 text-lg italic">Flaz</div>
-  </div>
+<svelte:head>
+  <title>Flaz</title>
+</svelte:head>
 
-  <div class="h-full w-full flex">
-    <div class="w-1/4 border-t border-r border-gray-600 flex flex-col">
-      <div class="h-full overflow-y-scroll"></div>
-      <div class="flex-none h-27 border-t border-gray-600 py-1">
+<div class="flex flex-col w-full h-dvh">
+  <div class="w-full italic font-semibold py-3 px-4">Flaz</div>
+
+  <div class="flex flex-1 overflow-hidden">
+    <div class={["w-1/4 flex flex-col", "border-b border-t border-gray-700"]}>
+      <div class="h-full overflow-y-scroll px-2 py-2">
+        <div
+          class={[
+            "whitespace-pre font-mono text-xs",
+            "text-gray-400 hover:text-gray-300 transition duration-100",
+          ]}>
+          {structureStringified}
+        </div>
+      </div>
+
+      <div class="h-32 flex-none border-t border-gray-700 flex flex-col">
         <textarea
+          placeholder="Talk to Flaz here..."
           onkeydown={e => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
@@ -133,36 +144,32 @@
             }
           }}
           bind:value={prompt}
-          class="textarea textarea-ghost outline-0 w-full h-full"
-          placeholder="Your prompt..."></textarea>
-      </div>
-      <div
-        class={[
-          "flex-none flex justify-between items-center pb-3 px-4",
-          prompt ? "text-white" : "text-gray-600",
-        ]}>
-        <div></div>
-        <button
-          type="button"
-          onclick={sendPrompt}
-          class="hover:text-gray-400 cursor-pointer">
-          <CircleArrowRight class="w-6 h-6" />
-        </button>
+          class="w-full h-full outline-0 text-sm px-3 py-2"></textarea>
+        <div class="text-right flex-none">
+          <button
+            type="button"
+            onclick={sendPrompt}
+            class={[
+              "px-2 pb-2 cursor-pointer",
+              "text-gray-200 hover:text-gray-400",
+              "transition duration-100",
+            ]}>
+            <CircleArrowRight class="w-6 h-6" />
+          </button>
+        </div>
       </div>
     </div>
 
-    <div class="w-3/4 border-t border-gray-600 flex flex-col py-4">
-      <div class="h-full overflow-y-scroll">
+    <div
+      class={[
+        "w-3/4 flex flex-col",
+        "border-b border-t border-l border-gray-700",
+      ]}>
+      <div class="w-full h-full text-xs px-3 py-2 overflow-scroll">
         <Renderer {structure} />
       </div>
 
-      <div bind:this={logOutput} class="flex-none border-t border-gray-600">
-        <div class="py-2 pl-2 h-36 overflow-y-scroll text-gray-300">
-          {#each messages as message}
-            <div>{message}</div>
-          {/each}
-        </div>
-      </div>
+      <LogViewer {messages} />
     </div>
   </div>
 </div>
