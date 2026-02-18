@@ -28,7 +28,9 @@ export const updateDefinitionByOperationString = ({
   //   "\n...updateDefinition",
   //   color.yellow(JSON.stringify(operation, null, 2)),
   // );
-  if (!operation) return definition;
+  if (!operation || operation.op === "info" || operation.op === "error") {
+    return { definition, operation };
+  }
 
   if (operation.path.startsWith("$states")) {
     const path = operation.path.split("$states.").join("").trim();
@@ -67,7 +69,7 @@ export const updateDefinitionByOperationString = ({
     definition.root = operation.value || "";
   }
 
-  return definition;
+  return { definition, operation };
 };
 
 const convertChildToRenderSchema = ({ element, definition }) => {

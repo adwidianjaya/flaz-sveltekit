@@ -33,6 +33,7 @@
 		"picocolors": "^1.1.1",
 		"svelte-autosize": "^1.1.5",
 		"svelte-sonner": "^1.0.7",
+		"tailwind-merge": "^3.4.1",
 		"zod": "^4.3.6"
 	}
 }

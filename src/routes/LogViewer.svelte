@@ -1,5 +1,8 @@
 <script>
+  import { twMerge } from "tailwind-merge";
+
   const { logs = [] } = $props();
+  // $inspect("...logs", logs);
 
   let logOutput = $state(null);
   $effect(() => {
@@ -24,10 +27,23 @@
       ? "text-gray-400 hover:text-gray-300 transition duration-100"
       : "text-gray-400",
   ]}>
-  {#each logs as logMessage}
+  {#each logs as log}
     <div
-      class="hover:bg-gray-700 hover:text-white rounded-sm py-0.5 px-1 -mx-1 shadow">
-      {logMessage}
+      class={twMerge([
+        "rounded-sm py-0.5 px-1 -mx-1 shadow",
+        /* default */ "hover:bg-gray-700 hover:text-white",
+        log.operation?.op === "add" &&
+          "hover:bg-gray-700 hover:text-white text-gray-400",
+        log.operation?.op === "remove" &&
+          "hover:bg-orange-700 hover:text-white text-orange-300",
+        log.operation?.op === "replace" &&
+          "hover:bg-purple-700 hover:text-white text-purple-300",
+        log.operation?.op === "info" &&
+          "hover:bg-blue-700 hover:text-white text-blue-300 py-1 mb-2",
+        log.operation?.op === "error" &&
+          "hover:bg-red-700 hover:text-white text-red-300 py-1 mb-2",
+      ])}>
+      {log.message}
     </div>
   {:else}
     <div class="py-0.5 px-1 -mx-1">No logs yet...</div>

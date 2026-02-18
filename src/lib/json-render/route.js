@@ -142,31 +142,64 @@ const handleRequest = async ({ request }) => {
   console.log("...system", color.cyan(systemPromptLines.join("\n")), "\n");
   // return new Response(prompt);
 
-  const result = streamText({
-    model: xai("grok-4-1-fast-non-reasoning"),
-    messages: [
-      { role: "system", content: systemPromptLines.join("\n") },
-      { role: "user", content: prompt },
-    ].filter(message => !!message.content),
-    onFinish: ({ text, finishReason, usage, response, steps, totalUsage }) => {
-      console.log("");
-      console.log("");
-      console.log("...inputTokens", color.red(totalUsage.inputTokens));
-      console.log("...outputTokens", color.red(totalUsage.outputTokens));
-      console.log("...totalTokens", color.red(totalUsage.totalTokens));
-    },
-  });
-
   const stream = new ReadableStream({
     async start(controller) {
       const encoder = new TextEncoder();
+
+      const result = streamText({
+        model: xai("grok-4-1-fast-non-reasoning"),
+        messages: [
+          { role: "system", content: systemPromptLines.join("\n") },
+          { role: "user", content: prompt },
+        ].filter(message => !!message.content),
+        onFinish: ({
+          text,
+          finishReason,
+          usage,
+          response,
+          steps,
+          totalUsage,
+        }) => {
+          controller.enqueue(
+            encoder.encode(
+              "\n" +
+                JSON.stringify({
+                  op: "info",
+                  inputTokens: totalUsage.inputTokens,
+                  outputTokens: totalUsage.outputTokens,
+                  totalTokens: totalUsage.totalTokens,
+                }),
+            ),
+          );
+
+          console.log("");
+          console.log("");
+          console.log("...inputTokens", color.red(totalUsage.inputTokens));
+          console.log("...outputTokens", color.red(totalUsage.outputTokens));
+          console.log("...totalTokens", color.red(totalUsage.totalTokens));
+
+          controller.close();
+        },
+        onError: error => {
+          console.error("...error", error);
+          controller.enqueue(
+            encoder.encode(
+              "\n" +
+                JSON.stringify({
+                  op: "error",
+                  message: error.message,
+                }),
+            ),
+          );
+
+          controller.close();
+        },
+      });
 
       for await (const textPart of result.textStream) {
         process.stdout.write(textPart);
         controller.enqueue(encoder.encode(textPart));
       }
-
-      controller.close();
     },
   });
 

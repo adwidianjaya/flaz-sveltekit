@@ -119,7 +119,6 @@
       const { value, done } = await reader.read();
       // console.log({ value, done });
       if (done) {
-        logs.push(lastLine);
         break;
       }
 
@@ -129,12 +128,18 @@
         lastLine += line;
 
         if (index < lines.length - 1) {
-          logs.push(String(lastLine).trim());
+          lastLine = String(lastLine).trim();
 
-          updateDefinitionByOperationString({
+          const { operation } = updateDefinitionByOperationString({
             operationString: lastLine,
             definition,
           });
+          if (operation) {
+            logs.push({
+              operation,
+              message: lastLine,
+            });
+          }
           schema = convertDefinitionToRenderSchema({
             definition,
             initialStates: schema.states,
@@ -145,14 +150,25 @@
       }
     }
 
-    updateDefinitionByOperationString({
-      operationString: lastLine,
-      definition,
-    });
-    schema = convertDefinitionToRenderSchema({
-      definition,
-      initialStates: schema.states,
-    });
+    lastLine = String(lastLine).trim();
+    if (lastLine) {
+      const { operation } = updateDefinitionByOperationString({
+        operationString: lastLine,
+        definition,
+      });
+      if (operation) {
+        logs.push({
+          operation,
+          message: lastLine,
+        });
+      }
+      schema = convertDefinitionToRenderSchema({
+        definition,
+        initialStates: schema.states,
+      });
+
+      lastLine = "";
+    }
   };
 </script>
 
