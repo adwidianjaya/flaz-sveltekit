@@ -10,56 +10,98 @@
 
   let prompt = $state(
     "create form, input name, and output simple greeting. The greeting should be in the form of 'Hello, {name}!' with orange text.",
+    // "change to Bahasa Indonesia",
   );
   // $inspect("...prompt", prompt);
   let definition = $state(initDefinition());
-  // $inspect("...definition", definition);
-  // let schema = $state({
-  //   elements: [],
-  //   states: {},
+  // let definition = $state({
+  //   root: "login-container",
+  //   states: {
+  //     form: {
+  //       name: "",
+  //     },
+  //   },
+  //   elements: {
+  //     "login-container": {
+  //       type: "Card",
+  //       props: {
+  //         title: "Greeting Form",
+  //         description: "Enter your name to see a greeting",
+  //         maxWidth: "sm",
+  //         centered: true,
+  //       },
+  //       children: ["name-input", "greeting-text"],
+  //     },
+  //     "name-input": {
+  //       type: "ShortText",
+  //       props: {
+  //         label: "Name",
+  //         placeholder: "Enter your name",
+  //         value: "$states.form.name",
+  //       },
+  //     },
+  //     "greeting-text": {
+  //       type: "Text",
+  //       props: {
+  //         text: "{$states.form.name ? 'Hello, ' + $states.form.name + '!' : ''}",
+  //         level: "p",
+  //         class: "text-orange-500 font-bold",
+  //       },
+  //     },
+  //   },
   // });
+  // $inspect("...definition", definition);
   let schema = $state({
-    elements: [
-      {
-        type: "Card",
-        props: {
-          title: "Greeting Form",
-          description: "Enter your name to see a greeting",
-          maxWidth: "sm",
-          centered: true,
-        },
-        children: [
-          {
-            type: "ShortText",
-            props: {
-              label: "Name",
-              value: "$states.form.name",
-            },
-          },
-          {
-            type: "Text",
-            props: {
-              text: "{$states.form.name ? 'Hello, ' + $states.form.name + '!' : ''}",
-              level: "p",
-              class: "text-orange-500 font-bold",
-            },
-          },
-        ],
-      },
-    ],
-    states: {
-      form: {
-        name: "",
-      },
-    },
+    elements: [],
+    states: {},
   });
+  // let schema = $state({
+  //   elements: [
+  //     {
+  //       type: "Card",
+  //       props: {
+  //         title: "Greeting Form",
+  //         description: "Enter your name to see a greeting",
+  //         maxWidth: "sm",
+  //         centered: true,
+  //       },
+  //       children: [
+  //         {
+  //           type: "ShortText",
+  //           props: {
+  //             label: "Name",
+  //             value: "$states.form.name",
+  //           },
+  //         },
+  //         {
+  //           type: "Text",
+  //           props: {
+  //             text: "{$states.form.name ? 'Hello, ' + $states.form.name + '!' : ''}",
+  //             level: "p",
+  //             class: "text-orange-500 font-bold",
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   ],
+  //   states: {
+  //     form: {
+  //       name: "",
+  //     },
+  //   },
+  // });
   const schemaStringified = $derived(JSON.stringify(schema, null, 2));
   // $inspect("...schema", schema);
-  let messages = $state([]);
-  // $inspect("...messages", messages);
+  let logs = $state([]);
+  // $inspect("...logs", logs);
 
   const sendPrompt = async () => {
-    let body = JSON.stringify({ prompt });
+    let body = JSON.stringify({
+      prompt,
+      context: {
+        ...definition,
+      },
+    });
     prompt = "";
     const response = await fetch("/api/chat", {
       method: "POST",
@@ -77,7 +119,7 @@
       const { value, done } = await reader.read();
       // console.log({ value, done });
       if (done) {
-        messages.push(lastLine);
+        logs.push(lastLine);
         break;
       }
 
@@ -87,7 +129,7 @@
         lastLine += line;
 
         if (index < lines.length - 1) {
-          messages.push(String(lastLine).trim());
+          logs.push(String(lastLine).trim());
 
           updateDefinitionByOperationString({
             operationString: lastLine,
@@ -169,7 +211,7 @@
         <Renderer bind:states={schema.states} elements={schema.elements} />
       </div>
 
-      <LogViewer {messages} />
+      <LogViewer {logs} />
     </div>
   </div>
 </div>

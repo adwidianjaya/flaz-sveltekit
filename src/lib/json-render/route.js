@@ -2,6 +2,7 @@ import { streamText } from "ai";
 import { createXai } from "@ai-sdk/xai";
 import { XAI_API_KEY } from "$env/static/private";
 import color from "picocolors";
+import { encode as toonEncode } from "@toon-format/toon";
 
 const xai = createXai({
   apiKey: XAI_API_KEY,
@@ -37,14 +38,16 @@ const catalog = {
 // console.log("...catalog", color.yellow(JSON.stringify(catalog, null, 2)));
 
 const handleRequest = async ({ request }) => {
-  const { prompt } = await request.json();
+  const { prompt, context } = await request.json();
   console.log("...prompt", color.green(prompt));
+  console.log("...context", color.green(JSON.stringify(context, null, 2)));
 
   const systemPromptLines = [];
   systemPromptLines.push(`You are a developer assistant.`);
 
   systemPromptLines.push(`You can only use the following components:`);
-  systemPromptLines.push(JSON.stringify(catalog.components, null, 2));
+  // systemPromptLines.push(JSON.stringify(catalog.components, null, 2));
+  systemPromptLines.push(toonEncode(catalog.components));
 
   systemPromptLines.push(
     `Response with JSONL format only. Avoid any markdown formatting.`,
@@ -126,12 +129,15 @@ const handleRequest = async ({ request }) => {
     "$states.[...].[...] on elements props to define two way state binding for reactivity.",
   );
   systemPromptLines.push(
-    "{$states.[...].[...]} on elements props to define read-only state binding for rendering. This form is also support ternary operator.",
+    "{$states.[...].[...]} or {...js expression...} on elements props to define read-only state binding for rendering.",
   );
 
   systemPromptLines.push(
     `\nAlways produce operation on $root path for first response.`,
   );
+
+  systemPromptLines.push(`\nHere is current elements and states:`);
+  systemPromptLines.push(toonEncode(context));
 
   console.log("...system", color.cyan(systemPromptLines.join("\n")), "\n");
   // return new Response(prompt);

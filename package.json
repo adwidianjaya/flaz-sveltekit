@@ -25,6 +25,7 @@
 		"vite": "^7.3.1"
 	},
 	"dependencies": {
+		"@toon-format/toon": "^2.1.0",
 		"daisyui": "^5.5.18",
 		"dayjs": "^1.11.19",
 		"lucide-svelte": "^0.564.0",

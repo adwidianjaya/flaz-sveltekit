@@ -14,7 +14,9 @@ export const updateDefinitionByOperationString = ({
 }) => {
   let operation = null;
   try {
-    operation = JSON.parse(operationString);
+    operation = JSON.parse(
+      operationString.split(`"\"`).join(`"`).split(`\""`).join(`"`),
+    );
   } catch (err) {
     console.warn(
       "...error parsing operationString",
@@ -48,23 +50,27 @@ export const updateDefinitionByOperationString = ({
       }
     }
   } else if (operation.path.startsWith("$elements")) {
-    if (operation.op === "remove") {
-      delete definition.elements[operation.path.split("$elements.").join("")];
-    } else if (operation.op === "replace") {
-      definition.elements[operation.path.split("$elements.").join("")] =
-        operation.value;
-    } else if (operation.op === "add") {
-      const elementId = operation.path.split("$elements.").join("");
-      definition.elements[elementId] = operation.value;
+    const path = operation.path.split("$elements.").join("");
+    if (path === "$elements") {
+      definition.elements = {};
+    } else {
+      if (operation.op === "remove") {
+        delete definition.elements[path];
+      } else if (operation.op === "replace") {
+        set(definition.elements, path, operation.value);
+      } else if (operation.op === "add") {
+        const elementId = path;
+        definition.elements[elementId] = operation.value;
+      }
     }
   } else if (operation.path.startsWith("$root")) {
-    definition.root = operation.value;
+    definition.root = operation.value || "";
   }
 
   return definition;
 };
 
-const convertChildToRenderStructure = ({ element, definition }) => {
+const convertChildToRenderSchema = ({ element, definition }) => {
   if (!element) return null;
 
   let renderStructure = JSON.parse(JSON.stringify(element));
@@ -72,7 +78,7 @@ const convertChildToRenderStructure = ({ element, definition }) => {
   if (renderStructure.children?.length > 0) {
     renderStructure.children = renderStructure.children
       .map(childId => {
-        return convertChildToRenderStructure({
+        return convertChildToRenderSchema({
           element: definition.elements[childId],
           definition,
         });
@@ -88,12 +94,15 @@ export const convertDefinitionToRenderSchema = ({
   initialStates = {},
 }) => {
   if (!definition.root || !definition.elements[definition.root]) {
-    return {};
+    return {
+      elements: [],
+      states: {},
+    };
   }
 
-  let render = {
+  let schema = {
     elements: [
-      convertChildToRenderStructure({
+      convertChildToRenderSchema({
         element: definition.elements[definition.root],
         definition,
       }),
@@ -101,5 +110,6 @@ export const convertDefinitionToRenderSchema = ({
     states: merge(JSON.parse(JSON.stringify(definition.states)), initialStates),
   };
 
-  return render;
+  // console.log("...schema", schema);
+  return schema;
 };

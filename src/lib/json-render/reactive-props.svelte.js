@@ -59,7 +59,7 @@ export function createReactiveProps(
         }
 
         // If bound, update the page state.
-        console.log("...set", newValue, bindingPath);
+        // console.log("...set", newValue, bindingPath);
         set(states || {}, bindingPath, newValue);
       },
       enumerable: true,
