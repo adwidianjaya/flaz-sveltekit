@@ -24,7 +24,7 @@ export function createReactiveProps(
     ) {
       const match = elementProps[reactiveKey].match(/\{\$states\.([^\s?}]*)/);
       const result = match[1];
-      console.log({ result });
+      // console.log({ result });
       bindingPath = result;
       bindingPaths.set(reactiveKey, bindingPath); // Cache the binding path
 

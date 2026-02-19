@@ -148,6 +148,7 @@ const handleRequest = async ({ request }) => {
 
       const result = streamText({
         model: xai("grok-4-1-fast-non-reasoning"),
+        // model: xai("grok-4-1-fast-reasoning"),
         messages: [
           { role: "system", content: systemPromptLines.join("\n") },
           { role: "user", content: prompt },
