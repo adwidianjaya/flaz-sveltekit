@@ -54,9 +54,9 @@ export function createReactiveProps(
           newValue = propValue;
         }
 
-        // if (reactiveKey === "class") {
-        //   console.log("...get", reactiveKey, { newValue });
-        // }
+        if (reactiveKey === "class") {
+          console.log("...get", reactiveKey, { newValue });
+        }
         return newValue;
       },
       set: function (newValue) {

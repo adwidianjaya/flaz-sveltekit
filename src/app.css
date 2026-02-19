@@ -2,6 +2,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap");
 
 @import "tailwindcss";
+@source "./src/data/pages/*.json";
+@source "./data/pages/*.json";
+
 @plugin "daisyui" {
   themes:
     light --default,
