@@ -6,6 +6,7 @@
     convertDefinitionToRenderSchema,
   } from "$lib/json-render/utilities";
   import Renderer from "$lib/json-render/Renderer.svelte";
+  import logo from "$lib/assets/logo-bg.png";
   import LogViewer from "./LogViewer.svelte";
   import SchemaViewer from "./SchemaViewer.svelte";
 
@@ -177,7 +178,13 @@
 </svelte:head>
 
 <div class="flex flex-col w-full h-dvh">
-  <div class="w-full italic font-semibold py-3 px-4">Flaz</div>
+  <div class="w-full italic font-semibold py-3 px-4">
+    <img
+      src={logo}
+      alt="Flaz Logo"
+      class="h-8 w-auto inline-block rounded-lg overflow-hidden" />
+    &nbsp; Flaz
+  </div>
 
   <div class="flex flex-1 overflow-hidden">
     <div class={["w-1/4 flex flex-col", "border-b border-t border-gray-700"]}>
