@@ -1,12 +1,12 @@
 import { DATABASE_URL } from "$env/static/private";
-import { init } from "$lib/db/init";
+import { initDb } from "$lib/db/init";
 import { sequence } from "@sveltejs/kit/hooks";
 
 let db;
 
 export const init = async () => {
   console.log("Init...", DATABASE_URL);
-  db = await init(DATABASE_URL);
+  db = await initDb(DATABASE_URL);
 };
 
 const populateLocals = async ({ event, resolve }) => {

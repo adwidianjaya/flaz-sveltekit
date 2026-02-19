@@ -3,6 +3,7 @@
 
   export const spec = {
     description: "Clickable button. Bind onclick to handle click events.",
+    tags: ["Action", "Form"],
     props: z
       .object({
         label: z.string().optional(),

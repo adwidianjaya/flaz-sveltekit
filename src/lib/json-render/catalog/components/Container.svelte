@@ -3,6 +3,7 @@
 
   export const spec = {
     description: "Flex container for layouts.",
+    tags: ["Layout"],
     props: z
       .object({
         direction: z.enum(["row", "column"]),

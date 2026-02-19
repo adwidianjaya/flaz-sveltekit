@@ -4,6 +4,7 @@
   export const spec = {
     description:
       "Card component, used to group other components inside its children.",
+    tags: ["Layout", "Content"],
     props: z
       .object({
         title: z.string().optional(),

@@ -92,7 +92,7 @@ const handleRequest = async ({ request }) => {
       op: "add",
       path: "$elements.email-input",
       value: {
-        type: "Input",
+        type: "TextInput",
         props: {
           label: "Email Address",
           name: "email",

@@ -10,12 +10,13 @@ const schema = {
       },
       children: [
         {
-          type: "ShortText",
+          type: "TextInput",
           props: {
             label: "Your Name",
             placeholder: "Enter your name",
             value: "{$states.form.name}",
             disabled: false,
+            multiline: false,
           },
         },
         {

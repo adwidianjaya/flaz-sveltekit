@@ -3,6 +3,7 @@
 
   export const spec = {
     description: "Plain text, with level such as heading or paragraph.",
+    tags: ["Content"],
     props: z
       .object({
         text: z.string().optional(),
