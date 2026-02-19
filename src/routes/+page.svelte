@@ -7,6 +7,7 @@
   } from "$lib/json-render/utilities";
   import Renderer from "$lib/json-render/Renderer.svelte";
   import LogViewer from "./LogViewer.svelte";
+  import SchemaViewer from "./SchemaViewer.svelte";
 
   let prompt = $state(
     "create form, input name, and output simple greeting. The greeting should be in the form of 'Hello, {name}!' with orange text.",
@@ -90,7 +91,6 @@
   //     },
   //   },
   // });
-  const schemaStringified = $derived(JSON.stringify(schema, null, 2));
   // $inspect("...schema", schema);
   let logs = $state([]);
   // $inspect("...logs", logs);
@@ -181,15 +181,7 @@
 
   <div class="flex flex-1 overflow-hidden">
     <div class={["w-1/4 flex flex-col", "border-b border-t border-gray-700"]}>
-      <div class="h-full overflow-y-scroll px-2 py-2">
-        <div
-          class={[
-            "whitespace-pre font-mono text-xs",
-            "text-gray-400 hover:text-gray-300 transition duration-100",
-          ]}>
-          {schemaStringified}
-        </div>
-      </div>
+      <SchemaViewer {schema} />
 
       <div class="h-32 flex-none border-t border-gray-700 flex flex-col">
         <textarea
@@ -223,8 +215,14 @@
         "w-3/4 flex flex-col",
         "border-b border-t border-l border-gray-700",
       ]}>
-      <div class="w-full h-full text-xs px-3 py-2 overflow-scroll">
-        <Renderer bind:states={schema.states} elements={schema.elements} />
+      <div class="w-full h-full text-xs overflow-scroll">
+        <div
+          class="sticky top-0 z-10 bg-gray-600 px-2 py-1 mb-1 text-xs text-gray-400">
+          Preview
+        </div>
+        <div class="px-3 py-2">
+          <Renderer bind:states={schema.states} elements={schema.elements} />
+        </div>
       </div>
 
       <LogViewer {logs} />

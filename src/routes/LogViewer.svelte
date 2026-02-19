@@ -22,15 +22,16 @@
 <div
   bind:this={logOutput}
   class={[
-    "h-32 flex-none border-t border-gray-700 px-3 py-2 overflow-y-scroll font-mono text-xs",
+    "h-32 flex-none border-t border-gray-700 overflow-y-scroll font-mono text-xs",
     logs.length > 0
       ? "text-gray-400 hover:text-gray-300 transition duration-100"
       : "text-gray-400",
   ]}>
+  <div class="sticky top-0 z-10 bg-gray-700 px-2 py-1 mb-1">Logs</div>
   {#each logs as log}
     <div
       class={twMerge([
-        "rounded-sm py-0.5 px-1 -mx-1 shadow",
+        "rounded-sm py-0.5 px-2 shadow",
         /* default */ "hover:bg-gray-700 hover:text-white",
         log.operation?.op === "add" &&
           "hover:bg-gray-700 hover:text-white text-gray-400",
@@ -46,6 +47,6 @@
       {log.message}
     </div>
   {:else}
-    <div class="py-0.5 px-1 -mx-1">No logs yet...</div>
+    <div class="py-1 px-4">No logs yet...</div>
   {/each}
 </div>
