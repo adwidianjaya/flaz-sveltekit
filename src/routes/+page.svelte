@@ -1,5 +1,4 @@
 <script>
-  import { CircleArrowRight } from "lucide-svelte";
   import {
     initDefinition,
     updateDefinitionByOperationString,
@@ -10,11 +9,13 @@
   import LogViewer from "./LogViewer.svelte";
   import SchemaViewer from "./SchemaViewer.svelte";
   import PromptInput from "./PromptInput.svelte";
+  import { schema as schemaMocked } from "./mock";
 
   let definition = $state(initDefinition());
   // $inspect("...definition", definition);
 
   let schema = $state({
+    // ...schemaMocked,
     elements: [],
     states: {},
   });
@@ -24,7 +25,7 @@
   // $inspect("...logs", logs);
 
   let prompt = $state(
-    "create form, input name, and output simple greeting. The greeting should be in the form of 'Hello, {name}!' with orange text.",
+    `create a form, input name, and output simple greeting. The greeting should be in the form of 'Hello, {name}!'. if name is empty, render "No Name" with orange text. then check name length, if above 10, render Name is too long. if name is "Adhe", render "Noice", else render the name`,
     // "change to Bahasa Indonesia",
   );
   // $inspect("...prompt", prompt);

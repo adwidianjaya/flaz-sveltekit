@@ -2,7 +2,6 @@
   import { z } from "zod";
 
   export const spec = {
-    name: "Button",
     description: "Clickable button. Bind onclick to handle click events.",
     props: z
       .object({

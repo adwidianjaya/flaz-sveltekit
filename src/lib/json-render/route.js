@@ -98,7 +98,7 @@ const handleRequest = async ({ request }) => {
           name: "email",
           type: "email",
           placeholder: "you@example.com",
-          value: "$states.form.email",
+          value: "{$states.form.email}",
           checks: [
             { type: "required", message: "Email is required" },
             { type: "email", message: "Please enter a valid email" },
@@ -125,11 +125,11 @@ const handleRequest = async ({ request }) => {
   );
 
   systemPromptLines.push(`\nState binding have two forms:`);
+  // systemPromptLines.push(
+  //   "$states.[...].[...] on elements props to define two way state binding for reactivity.",
+  // );
   systemPromptLines.push(
-    "$states.[...].[...] on elements props to define two way state binding for reactivity.",
-  );
-  systemPromptLines.push(
-    "{$states.[...].[...]} or {...js expression...} on elements props to define read-only state binding for rendering.",
+    "{$states.[...].[...]} or {...js expression...} on elements props to define state binding.",
   );
 
   systemPromptLines.push(

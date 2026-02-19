@@ -2,7 +2,6 @@
   import { z } from "zod";
 
   export const spec = {
-    name: "Container",
     description: "Flex container for layouts.",
     props: z
       .object({

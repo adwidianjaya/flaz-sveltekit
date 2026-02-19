@@ -2,7 +2,6 @@
   import { z } from "zod";
 
   export const spec = {
-    name: "ShortText",
     description: "Short text, single line input.",
     props: z
       .object({

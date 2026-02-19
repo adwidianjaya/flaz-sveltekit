@@ -2,7 +2,6 @@
   import { z } from "zod";
 
   export const spec = {
-    name: "Card",
     description:
       "Card component, used to group other components inside its children.",
     props: z

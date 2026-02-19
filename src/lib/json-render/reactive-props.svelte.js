@@ -18,39 +18,42 @@ export function createReactiveProps(
     let bindingPath = bindingPaths.get(reactiveKey);
     if (
       typeof elementProps[reactiveKey] === "string" &&
-      elementProps[reactiveKey].startsWith("$states.") &&
+      elementProps[reactiveKey].startsWith("{$states.") &&
+      elementProps[reactiveKey].endsWith("}") &&
       (!bindingPath || options?.forceReloadBindingPath)
     ) {
-      bindingPath = elementProps[reactiveKey].split("$states.").join("");
-      // console.log({ propsValue: elementProps[reactiveKey], bindingPath });
+      const match = elementProps[reactiveKey].match(/\{\$states\.([^\s?}]*)/);
+      const result = match[1];
+      console.log({ result });
+      bindingPath = result;
       bindingPaths.set(reactiveKey, bindingPath); // Cache the binding path
+
+      // bindingPath = elementProps[reactiveKey].split("$states.").join("");
+      // // console.log({ propsValue: elementProps[reactiveKey], bindingPath });
+      // bindingPaths.set(reactiveKey, bindingPath); // Cache the binding path
     }
 
+    // console.log("...reactiveKey", reactiveKey, bindingPath);
     Object.defineProperty(reactiveProps, reactiveKey, {
       get: function () {
         // Compute the current value for the reactive property.
         let newValue;
-        if (bindingPath) {
-          // If bound, get value from states
-          newValue = get(states || {}, bindingPath) ?? "";
-          // console.log("...get", newValue, bindingPath);
-        } else {
-          // Otherwise, get value directly from prop or template it.
-          let propValue = elementProps[reactiveKey] ?? "";
-          if (isString(propValue)) {
-            try {
-              newValue = SimpleTemplatingEngine.render(propValue, states || {});
-            } catch (error) {
-              console.warn(
-                `Error handling template for key '${reactiveKey}':`,
-                error,
-              );
-              newValue = propValue; // Fallback to raw prop value on error
-            }
-          } else {
-            newValue = propValue;
+
+        let propValue = elementProps[reactiveKey] ?? "";
+        if (isString(propValue)) {
+          try {
+            newValue = SimpleTemplatingEngine.render(propValue, states || {});
+          } catch (error) {
+            console.warn(
+              `Error handling template for key '${reactiveKey}':`,
+              error,
+            );
+            newValue = propValue; // Fallback to raw prop value on error
           }
+        } else {
+          newValue = propValue;
         }
+
         return newValue;
       },
       set: function (newValue) {

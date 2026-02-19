@@ -2,7 +2,6 @@
   import { z } from "zod";
 
   export const spec = {
-    name: "Text",
     description: "Plain text, with level such as heading or paragraph.",
     props: z
       .object({

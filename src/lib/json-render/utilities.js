@@ -13,16 +13,19 @@ export const updateDefinitionByOperationString = ({
   definition,
 }) => {
   let operation = null;
+  let sanitizedString = operationString || "";
   try {
-    operation = JSON.parse(
-      operationString.split(`"\"`).join(`"`).split(`\""`).join(`"`),
-    );
+    if (sanitizedString.startsWith(`"\"`)) {
+      sanitizedString = operationString.split(`"\"`).join(`"`);
+    }
+    if (sanitizedString.endsWith(`\""`)) {
+      sanitizedString = operationString.split(`\""`).join(`"`);
+    }
+    operation = JSON.parse(sanitizedString);
   } catch (err) {
-    console.warn(
-      "...error parsing operationString",
-      err.message,
-      // color.red(operationString),
-    );
+    console.warn("...error parsing operationString", err.message, {
+      sanitizedString,
+    });
   }
   // console.log(
   //   "\n...updateDefinition",
