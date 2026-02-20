@@ -1,4 +1,4 @@
-import { merge, set } from "lodash-es";
+import { merge, set, unset } from "lodash-es";
 
 export const initDefinition = () => {
   return {
@@ -51,10 +51,7 @@ export const updateDefinitionByOperationString = ({
       }
     } else {
       if (operation.op === "remove") {
-        // do nothing
-        if (definition.states[path]) {
-          delete definition.states[path];
-        }
+        unset(definition.states, path);
       } else {
         set(definition.states, path, operation.value);
       }

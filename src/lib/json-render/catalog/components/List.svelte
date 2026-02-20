@@ -48,7 +48,9 @@
   <ol
     class={[
       "pl-5",
-      props.marker === "none" ? "list-none" : "list-decimal",
+      props.marker === "none" && "list-none",
+      props.marker === "disc" && "list-disc",
+      (!props.marker || props.marker === "decimal") && "list-decimal",
       props.class,
     ]}>
     {#each normalizedItems as item}

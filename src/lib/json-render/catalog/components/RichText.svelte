@@ -91,7 +91,7 @@
         '$1=$2#$2',
       );
 
-  const markdownHtml = $derived(markdownToHtml(props.content));
+  const markdownHtml = $derived(sanitizeHtml(markdownToHtml(props.content)));
   const safeHtml = $derived(sanitizeHtml(props.content));
 </script>
 

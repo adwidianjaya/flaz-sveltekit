@@ -23,7 +23,8 @@
   } = $props();
 </script>
 
-<div
+<svelte:element
+  this={props.level || "p"}
   class={[
     "mt-2",
     props.level === "h1" && "text-3xl",
@@ -34,4 +35,4 @@
     props.level === "h6" && "text-sm",
     props.level === "p" && "text-sm",
     props.class,
-  ]}>{props.text}</div>
+  ]}>{props.text}</svelte:element>

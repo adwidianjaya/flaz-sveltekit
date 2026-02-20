@@ -50,6 +50,17 @@
   {#if props.title}
     <div class="text-lg pt-1">{props.title}</div>
   {/if}
+  {#if props.description}
+    <div
+      class={[
+        "text-sm text-gray-200",
+        props.gap === "0" && "pb-0",
+        props.gap === "2" && "pb-2",
+        props.gap === "4" && "pb-4",
+        props.gap === "6" && "pb-6",
+        props.gap === "8" && "pb-8",
+      ]}>{props.description}</div>
+  {/if}
   <div
     class={[
       props.layout === "grid" ? "grid" : "flex flex-col" /* Default to stack */,
@@ -63,9 +74,6 @@
       props.gap === "6" && "gap-6",
       props.gap === "8" && "gap-8",
     ]}>
-    {#if props.description}
-      <div class="text-sm text-gray-200">{props.description}</div>
-    {/if}
     {@render children?.()}
   </div>
 </div>

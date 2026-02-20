@@ -76,10 +76,6 @@ export const buildSystemPrompt = ({
           type: "email",
           placeholder: "you@example.com",
           value: "{$states.form.email}",
-          checks: [
-            { type: "required", message: "Email is required" },
-            { type: "email", message: "Please enter a valid email" },
-          ],
         },
         // children: [],
       },

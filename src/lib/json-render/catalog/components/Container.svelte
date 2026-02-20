@@ -16,7 +16,7 @@
             "end",
             "between",
             "around",
-            "eventy",
+            "evenly",
             "stretch",
             "normal",
           ])
@@ -58,7 +58,7 @@
     props.justify === "end" && `justify-end`,
     props.justify === "between" && `justify-between`,
     props.justify === "around" && `justify-around`,
-    props.justify === "eventy" && `justify-evenly`,
+    props.justify === "evenly" && `justify-evenly`,
     props.justify === "stretch" && `justify-stretch`,
     props.justify === "normal" && `justify-normal`,
     props.class,

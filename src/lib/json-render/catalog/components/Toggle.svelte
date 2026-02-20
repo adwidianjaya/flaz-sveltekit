@@ -2,7 +2,7 @@
   import { z } from "zod";
 
   export const spec = {
-    description: "Toggle switch input based on daisyUI toggle styles.",
+    description: "Toggle switch for boolean values. Supports size, color, and indeterminate state.",
     tags: ["Input"],
     props: z
       .object({

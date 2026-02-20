@@ -5,7 +5,7 @@ Each component is defined by a `spec` object that contains the following propert
 
 - `description`: A brief description of the component.
 - `tags`: Tags that describe the component. May contains one or more of the following tags:
-  - `Form`: The component is used for form inputs.
+  - `Input`: The component is used for form inputs.
   - `Content`: The component is used for content such as headings, paragraphs, and lists.
   - `Layout`: The component is used for layout such as containers, grids, and columns.
   - `Action`: The component is used for actions such as buttons, links, and navigation.
