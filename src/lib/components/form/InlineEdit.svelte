@@ -72,9 +72,9 @@
   <button
     type="button"
     class={[
-      "rounded",
+      "rounded py-0.5 px-1 rounded",
       "hover:bg-slate-300/60 transition-colors",
-      "underline decoration-dashed cursor-pointer",
+      "hover:underline decoration-dashed cursor-pointer",
       "disabled:opacity-50 disabled:cursor-not-allowed",
     ]}
     onclick={showEditor}
