@@ -57,7 +57,7 @@
   ]);
 </script>
 
-<label class={["label cursor-pointer pt-4 justify-start gap-3", props.class]}>
+<label class={["label cursor-pointer justify-start gap-3", props.class]}>
   <input
     bind:this={inputEl}
     type="checkbox"

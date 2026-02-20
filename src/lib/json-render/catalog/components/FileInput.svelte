@@ -48,7 +48,7 @@
   });
 </script>
 
-<div class="pt-4">
+<div>
   <label class="floating-label w-full">
     <span>{props.label}</span>
     <input

@@ -49,7 +49,7 @@
   };
 </script>
 
-<div class={["pt-4", props.class]}>
+<div class={props.class}>
   {#if props.label}
     <div class="label py-1">
       <span class="label-text">{props.label}</span>

@@ -26,7 +26,7 @@
   } = $props();
 </script>
 
-<label class={["label cursor-pointer pt-4 justify-start gap-3", props.class]}>
+<label class={["label cursor-pointer justify-start gap-3", props.class]}>
   <input
     type="checkbox"
     class="toggle"

@@ -11,6 +11,9 @@
         description: z.string().optional(),
         maxWidth: z.enum(["sm", "md", "lg", "xl", "2xl", "3xl"]).optional(),
         centered: z.boolean().optional().default(false),
+        layout: z.enum(["stack", "grid"]).optional().default("stack"),
+        gap: z.enum(["0", "2", "4", "6", "8"]).optional().default("4"),
+        columns: z.enum(["1", "2", "3", "4"]).optional().default("1"),
         class: z.string().optional(),
       })
       .toJSONSchema(),
@@ -24,6 +27,9 @@
       description: "",
       maxWidth: "md",
       centered: false,
+      layout: "stack",
+      gap: "4",
+      columns: "1",
     }),
     children,
   } = $props();
@@ -31,7 +37,7 @@
 
 <div
   class={[
-    "px-4 py-3 rounded border border-gray-600 bg-gray-700",
+    "px-4 pt-4 pb-4 rounded border border-gray-600 bg-gray-700",
     props.maxWidth === "sm" && "max-w-sm",
     props.maxWidth === "md" && "max-w-md",
     props.maxWidth === "lg" && "max-w-lg",
@@ -41,7 +47,25 @@
     props.centered && "mx-auto",
     props.class,
   ]}>
-  <div class="text-lg">{props.title}</div>
-  <div class="text-sm">{props.description}</div>
-  {@render children?.()}
+  {#if props.title}
+    <div class="text-lg pt-1">{props.title}</div>
+  {/if}
+  <div
+    class={[
+      props.layout === "grid" ? "grid" : "flex flex-col" /* Default to stack */,
+      props.layout === "grid" && props.columns === "1" && "grid-cols-1",
+      props.layout === "grid" && props.columns === "2" && "grid-cols-2",
+      props.layout === "grid" && props.columns === "3" && "grid-cols-3",
+      props.layout === "grid" && props.columns === "4" && "grid-cols-4",
+      props.gap === "0" && "gap-0",
+      props.gap === "2" && "gap-2",
+      props.gap === "4" && "gap-4",
+      props.gap === "6" && "gap-6",
+      props.gap === "8" && "gap-8",
+    ]}>
+    {#if props.description}
+      <div class="text-sm text-gray-200">{props.description}</div>
+    {/if}
+    {@render children?.()}
+  </div>
 </div>

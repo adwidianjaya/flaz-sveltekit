@@ -39,7 +39,7 @@
 </script>
 
 {#if (props.options || []).length > 0}
-  <div class={["pt-4", props.class]}>
+  <div class={props.class}>
     {#if props.label}
       <div class="label py-1"
         ><span class="label-text">{props.label}</span></div>
@@ -63,16 +63,14 @@
     </div>
   </div>
 {:else}
-  <label
-    class={[
-      "label cursor-pointer pt-4 justify-start items-center gap-3",
-      props.class,
-    ]}>
-    <input
-      type="checkbox"
-      class="checkbox"
-      disabled={props.disabled}
-      bind:checked={props.checked} />
-    <span class="label-text">{props.label}</span>
-  </label>
+  <div class={props.class}>
+    <label class="label cursor-pointer justify-start items-center gap-3">
+      <input
+        type="checkbox"
+        class="checkbox"
+        disabled={props.disabled}
+        bind:checked={props.checked} />
+      <span class="label-text">{props.label}</span>
+    </label>
+  </div>
 {/if}
