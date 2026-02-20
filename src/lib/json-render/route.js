@@ -1,11 +1,29 @@
 import { streamText } from "ai";
 import { createXai } from "@ai-sdk/xai";
-import { XAI_API_KEY } from "$env/static/private";
+import { createOpenAI } from "@ai-sdk/openai";
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import {
+  XAI_API_KEY,
+  OPENAI_API_KEY,
+  ANTHROPIC_API_KEY,
+  GEMINI_API_KEY,
+} from "$env/static/private";
 import color from "picocolors";
-import { encode as toonEncode } from "@toon-format/toon";
+
+import { buildSystemPrompt } from "./prompt";
 
 const xai = createXai({
   apiKey: XAI_API_KEY,
+});
+const openai = createOpenAI({
+  apiKey: OPENAI_API_KEY,
+});
+const anthropic = createAnthropic({
+  apiKey: ANTHROPIC_API_KEY,
+});
+const google = createGoogleGenerativeAI({
+  apiKey: GEMINI_API_KEY,
 });
 
 const componentModules = import.meta.glob(
@@ -39,176 +57,93 @@ const catalog = {
 
 const handleRequest = async ({ request }) => {
   const { prompt, context } = await request.json();
+  console.log("...handleRequest", prompt);
+  // console.log("...context", color.green(JSON.stringify(context, null, 2)));
+
+  const systemPromptLines = buildSystemPrompt({
+    catalog,
+    currentElements: context?.elements,
+    currentStates: context?.states,
+  });
+  console.log("...system", color.cyan(systemPromptLines), "\n");
   console.log("...prompt", color.green(prompt));
-  console.log("...context", color.green(JSON.stringify(context, null, 2)));
-
-  const systemPromptLines = [];
-  systemPromptLines.push(`You are a developer assistant.`);
-
-  systemPromptLines.push(`You can only use the following components:`);
-  // systemPromptLines.push(JSON.stringify(catalog.components, null, 2));
-  systemPromptLines.push(toonEncode(catalog.components));
-  systemPromptLines.push(
-    `\nPrioritize native component props for customizing. Manually adding class names must be avoided until necessary.`,
-  );
-
-  systemPromptLines.push(`\nHere is current elements and states:`);
-  systemPromptLines.push(toonEncode(context));
-
-  systemPromptLines.push(
-    `Response with JSONL format only. Avoid any markdown formatting.`,
-  );
-
-  systemPromptLines.push(`\nThere are three types of operations:`);
-  systemPromptLines.push(`{"op":"add","path":"...","value": ...}`);
-  systemPromptLines.push(`{"op":"replace","path":"...","value": ...}`);
-  systemPromptLines.push(`{"op":"remove","path":"...","value": ...}`);
-
-  systemPromptLines.push(
-    `\nHere are examples for $states path (for state operation):`,
-  );
-  systemPromptLines.push(
-    JSON.stringify({ op: "add", path: "$states.form.email", value: "" }),
-  );
-
-  systemPromptLines.push(
-    `\nHere are examples for $elements path (for visual operation and state binding):`,
-  );
-  systemPromptLines.push(
-    JSON.stringify({ op: "add", path: "$root", value: "login-container" }),
-  );
-  systemPromptLines.push(
-    JSON.stringify({
-      op: "add",
-      path: "$elements.login-container",
-      value: {
-        type: "Card",
-        props: {
-          title: "Sign In",
-          description: "Enter your credentials to access your account",
-          maxWidth: "sm",
-          centered: true,
-        },
-        children: ["email-input", "greeting-text"],
-      },
-    }),
-  );
-  systemPromptLines.push(
-    JSON.stringify({
-      op: "add",
-      path: "$elements.email-input",
-      value: {
-        type: "TextInput",
-        props: {
-          label: "Email Address",
-          name: "email",
-          type: "email",
-          placeholder: "you@example.com",
-          value: "{$states.form.email}",
-          checks: [
-            { type: "required", message: "Email is required" },
-            { type: "email", message: "Please enter a valid email" },
-          ],
-        },
-        // children: [],
-      },
-    }),
-  );
-  systemPromptLines.push(
-    JSON.stringify({
-      op: "add",
-      path: "$elements.greeting-text",
-      value: {
-        type: "Text",
-        props: {
-          text: "{$states.form.email ? 'Hello, ' + $states.form.email + '!' : ''}",
-          level: "p",
-          class: "text-orange-500 font-bold",
-        },
-        // children: [],
-      },
-    }),
-  );
-
-  systemPromptLines.push(`\nState binding have two forms:`);
-  // systemPromptLines.push(
-  //   "$states.[...].[...] on elements props to define two way state binding for reactivity.",
-  // );
-  systemPromptLines.push(
-    "{$states.[...].[...]} or {...js expression...} on elements props to define state binding.",
-  );
-
-  systemPromptLines.push(
-    `Build nested path start from top level paths: $root, $states, and $elements.`,
-  );
-  systemPromptLines.push(
-    `Avoid pathing with slashes, and always use dot notation for nested paths.`,
-  );
-  systemPromptLines.push(
-    `\nAlways produce operation on $root path for first response.`,
-  );
-
-  console.log("...system", color.cyan(systemPromptLines.join("\n")), "\n");
   // return new Response(prompt);
 
   const stream = new ReadableStream({
     async start(controller) {
-      const encoder = new TextEncoder();
+      try {
+        const encoder = new TextEncoder();
 
-      const result = streamText({
-        model: xai("grok-4-1-fast-non-reasoning"),
-        // model: xai("grok-4-1-fast-reasoning"),
-        messages: [
-          { role: "system", content: systemPromptLines.join("\n") },
-          { role: "user", content: prompt },
-        ].filter(message => !!message.content),
-        onFinish: ({
-          text,
-          finishReason,
-          usage,
-          response,
-          steps,
-          totalUsage,
-        }) => {
-          controller.enqueue(
-            encoder.encode(
-              "\n" +
-                JSON.stringify({
-                  op: "info",
-                  inputTokens: totalUsage.inputTokens,
-                  outputTokens: totalUsage.outputTokens,
-                  totalTokens: totalUsage.totalTokens,
-                }),
-            ),
-          );
+        const result = streamText({
+          model: google("gemini-3-flash-preview"),
+          providerOptions: {
+            google: {
+              thinkingConfig: {
+                thinkingBudget: 0,
+              },
+            },
+          },
 
-          console.log("");
-          console.log("");
-          console.log("...inputTokens", color.red(totalUsage.inputTokens));
-          console.log("...outputTokens", color.red(totalUsage.outputTokens));
-          console.log("...totalTokens", color.red(totalUsage.totalTokens));
+          // model: anthropic("claude-haiku-4-5-20251001"),
+          // model: openai("gpt-5.1-codex-mini"),
+          // model: xai("grok-4-1-fast-non-reasoning"),
+          messages: [
+            { role: "system", content: systemPromptLines },
+            { role: "user", content: prompt },
+          ].filter(message => !!message.content),
+          onFinish: ({
+            text,
+            finishReason,
+            usage,
+            response,
+            steps,
+            totalUsage,
+          }) => {
+            controller.enqueue(
+              encoder.encode(
+                "\n" +
+                  JSON.stringify({
+                    op: "info",
+                    inputTokens: totalUsage.inputTokens,
+                    outputTokens: totalUsage.outputTokens,
+                    reasoningTokens: usage.reasoningTokens,
+                    totalTokens: totalUsage.totalTokens,
+                  }),
+              ),
+            );
 
-          controller.close();
-        },
-        onError: error => {
-          console.error("...error", error);
-          controller.enqueue(
-            encoder.encode(
-              "\n" +
-                JSON.stringify({
-                  op: "error",
-                  message: error.message,
-                }),
-            ),
-          );
+            console.log("");
+            console.log("");
+            console.log("...inputTokens", color.red(totalUsage.inputTokens));
+            console.log("...outputTokens", color.red(totalUsage.outputTokens));
+            console.log("...reasoningTokens", color.red(usage.reasoningTokens));
+            console.log("...totalTokens", color.red(totalUsage.totalTokens));
 
-          controller.close();
-        },
-      });
+            controller.close();
+          },
+          onError: error => {
+            console.error("...error", error);
+            controller.enqueue(
+              encoder.encode(
+                "\n" +
+                  JSON.stringify({
+                    op: "error",
+                    message: error.message,
+                  }),
+              ),
+            );
 
-      for await (const textPart of result.textStream) {
-        process.stdout.write(textPart);
-        controller.enqueue(encoder.encode(textPart));
+            controller.close();
+          },
+        });
+
+        console.warn("\n...output...");
+        for await (const textPart of result.textStream) {
+          process.stdout.write(textPart);
+          controller.enqueue(encoder.encode(textPart));
+        }
+      } catch (err) {
+        console.warn("...error", color.red(err));
       }
     },
   });
