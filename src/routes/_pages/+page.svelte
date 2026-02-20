@@ -31,7 +31,8 @@
       <span>No pages found in database.</span>
     </div>
   {:else}
-    <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-100">
+    <div
+      class="overflow-x-auto rounded-box border border-base-content/10 bg-base-100">
       <table class="table">
         <thead>
           <tr>
@@ -46,9 +47,13 @@
             <tr>
               <td>{page.name || "-"}</td>
               <td><code>{page.path || "/"}</code></td>
-              <td>{page.updated_at ? new Date(page.updated_at).toLocaleString() : "-"}</td>
+              <td
+                >{page.updated_at
+                  ? new Date(page.updated_at).toLocaleString()
+                  : "-"}</td>
               <td class="text-right">
-                <a class="btn btn-xs btn-primary" href={toEditHref(page.path)}>Edit</a>
+                <a class="btn btn-xs btn-primary" href={toEditHref(page.path)}
+                  >Edit</a>
               </td>
             </tr>
           {/each}
