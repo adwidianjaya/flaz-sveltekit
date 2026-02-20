@@ -52,8 +52,8 @@
 
   let toggleClasses = $derived.by(() => [
     "toggle",
-    props.size ? `toggle-${props.size}` : "",
-    props.color ? `toggle-${props.color}` : "",
+    props.size && `toggle-${props.size}`,
+    props.color && `toggle-${props.color}`,
   ]);
 </script>
 

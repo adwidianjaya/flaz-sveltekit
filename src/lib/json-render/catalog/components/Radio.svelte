@@ -48,7 +48,7 @@
     {#if props.label}
       <div class="label py-1"><span class="label-text">{props.label}</span></div>
     {/if}
-    <div class={["flex gap-3", props.direction === "row" ? "flex-row" : "flex-col"]}>
+    <div class={["flex gap-3", props.direction === "row" && "flex-row", (!props.direction || props.direction === "column") && "flex-col"]}>
       {#each props.options || [] as option}
         <label class="label cursor-pointer justify-start gap-3">
           <input

@@ -63,7 +63,8 @@
   {/if}
   <div
     class={[
-      props.layout === "grid" ? "grid" : "flex flex-col" /* Default to stack */,
+      !props.layout && "flex flex-col",
+      props.layout === "grid" && "grid",
       props.layout === "grid" && props.columns === "1" && "grid-cols-1",
       props.layout === "grid" && props.columns === "2" && "grid-cols-2",
       props.layout === "grid" && props.columns === "3" && "grid-cols-3",
