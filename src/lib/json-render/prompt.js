@@ -12,7 +12,6 @@ export const buildSystemPrompt = ({
   systemPromptLines.push(`You are a developer assistant.`);
 
   systemPromptLines.push(`You can only use the following components:`);
-  // systemPromptLines.push(JSON.stringify(catalog.components, null, 2));
   systemPromptLines.push(toonEncode(catalog.components));
   systemPromptLines.push(
     `\nPrioritize native component props for customizing. Manually adding class names must be avoided until necessary.`,
@@ -26,17 +25,15 @@ export const buildSystemPrompt = ({
     }),
   );
 
+  systemPromptLines.push(`Provide response in plain text JSONL format.`);
   systemPromptLines.push(
-    `Provide response in plain text of JSONL format, line by line.`,
-  );
-  systemPromptLines.push(
-    "Do not use Markdown. Do not use any special formatting characters.",
+    `Do not use Markdown. Do not use any special formatting characters.`,
   );
 
   systemPromptLines.push(`\nThere are three types of operations:`);
   systemPromptLines.push(`{"op":"add","path":"...","value": ...}`);
   systemPromptLines.push(`{"op":"replace","path":"...","value": ...}`);
-  systemPromptLines.push(`{"op":"remove","path":"...","value": ...}`);
+  systemPromptLines.push(`{"op":"remove","path":"..."}`);
 
   systemPromptLines.push(
     `\nHere are examples for $states path (for state operation):`,
@@ -104,12 +101,11 @@ export const buildSystemPrompt = ({
     }),
   );
 
-  systemPromptLines.push(`\nState binding have two forms:`);
-  // systemPromptLines.push(
-  //   "$states.[...].[...] on elements props to define two way state binding for reactivity.",
-  // );
   systemPromptLines.push(
-    "{$states.[...].[...]} or {...js expression...} on elements props to define state binding.",
+    `\nState binding have two forms: {$states.[...].[...]} or {...js expression...} on elements props to define state binding.`,
+  );
+  systemPromptLines.push(
+    `Binding policy: direct binding must be exactly "{$states...}". Expression binding "{...}" is read-only against $states and must not include side effects, declarations, or function definitions.`,
   );
 
   systemPromptLines.push(
@@ -118,8 +114,21 @@ export const buildSystemPrompt = ({
   systemPromptLines.push(
     `Avoid pathing with slashes, and always use dot notation for nested paths.`,
   );
+  // systemPromptLines.push(
+  //   `Path grammar examples: $root, $states.form.email, $elements.login-card, $elements.login-card.props.title, $elements.login-card.children.`,
+  // );
+
   systemPromptLines.push(
-    `\nAlways produce operation on $root path for first response.`,
+    `Element policy: element IDs must be unique, children must reference existing element IDs, and children cycles are not allowed.`,
+  );
+  systemPromptLines.push(
+    `Operation ordering policy: create required $states paths before bindings, create child elements before parent children references, and remove parent references before removing a child element.`,
+  );
+  systemPromptLines.push(
+    `Minimality policy: do not emit no-op changes; prefer replace over remove+add at the same path when possible.`,
+  );
+  systemPromptLines.push(
+    `\nFirst-response rule: if $root is empty or missing, line 1 MUST be {"op":"add","path":"$root","value":"<element-id>"}. If $root already exists, do not re-add it.`,
   );
 
   return systemPromptLines.join("\n");
