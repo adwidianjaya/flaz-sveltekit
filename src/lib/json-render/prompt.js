@@ -27,7 +27,10 @@ export const buildSystemPrompt = ({
   );
 
   systemPromptLines.push(
-    `Response with JSONL format only. Avoid any markdown formatting.`,
+    `Provide response in plain text of JSONL format, line by line.`,
+  );
+  systemPromptLines.push(
+    "Do not use Markdown. Do not use any special formatting characters.",
   );
 
   systemPromptLines.push(`\nThere are three types of operations:`);

@@ -75,16 +75,17 @@ const handleRequest = async ({ request }) => {
         const encoder = new TextEncoder();
 
         const result = streamText({
-          model: google("gemini-3-flash-preview"),
-          providerOptions: {
-            google: {
-              thinkingConfig: {
-                thinkingBudget: 0,
-              },
-            },
-          },
+          // model: google("gemini-3-flash-preview"),
+          // providerOptions: {
+          //   google: {
+          //     thinkingConfig: {
+          //       thinkingBudget: 0,
+          //     },
+          //   },
+          // },
 
-          // model: anthropic("claude-haiku-4-5-20251001"),
+          model: anthropic("claude-haiku-4-5-20251001"),
+
           // model: openai("gpt-5.1-codex-mini"),
           // model: xai("grok-4-1-fast-non-reasoning"),
           messages: [
@@ -106,7 +107,8 @@ const handleRequest = async ({ request }) => {
                     op: "info",
                     inputTokens: totalUsage.inputTokens,
                     outputTokens: totalUsage.outputTokens,
-                    reasoningTokens: usage.reasoningTokens,
+                    reasoningTokens:
+                      usage.outputTokenDetails.reasoningTokens || 0,
                     totalTokens: totalUsage.totalTokens,
                   }),
               ),
@@ -116,8 +118,12 @@ const handleRequest = async ({ request }) => {
             console.log("");
             console.log("...inputTokens", color.red(totalUsage.inputTokens));
             console.log("...outputTokens", color.red(totalUsage.outputTokens));
-            console.log("...reasoningTokens", color.red(usage.reasoningTokens));
+            console.log(
+              "...reasoningTokens",
+              color.red(usage.outputTokenDetails.reasoningTokens || 0),
+            );
             console.log("...totalTokens", color.red(totalUsage.totalTokens));
+            console.log({ usage });
 
             controller.close();
           },
