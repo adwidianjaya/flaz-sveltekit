@@ -3,7 +3,7 @@
 
   export const spec = {
     description: "Number input with min/max/step support.",
-    tags: ["Form"],
+    tags: ["Input"],
     props: z
       .object({
         label: z.string().optional(),

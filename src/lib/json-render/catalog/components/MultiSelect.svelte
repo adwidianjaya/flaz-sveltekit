@@ -8,7 +8,7 @@
 
   export const spec = {
     description: "Dropdown multi select input.",
-    tags: ["Form"],
+    tags: ["Input"],
     props: z
       .object({
         label: z.string().optional(),

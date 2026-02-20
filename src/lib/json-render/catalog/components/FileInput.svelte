@@ -3,7 +3,7 @@
 
   export const spec = {
     description: "File input. Emits selected file (or files) through props.files.",
-    tags: ["Form"],
+    tags: ["Input"],
     props: z
       .object({
         label: z.string().optional(),

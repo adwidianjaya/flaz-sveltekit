@@ -4,7 +4,7 @@
   export const spec = {
     description:
       "Text input with optional type for single line, or textarea when multiline is true.",
-    tags: ["Form"],
+    tags: ["Input"],
     props: z
       .object({
         label: z.string().optional(),

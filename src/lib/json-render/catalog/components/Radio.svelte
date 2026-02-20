@@ -7,15 +7,15 @@
   });
 
   export const spec = {
-    description:
-      "Checkbox input for boolean values or grouped options for multiple selected values.",
+    description: "Single radio input option or grouped radio options.",
     tags: ["Input"],
     props: z
       .object({
         label: z.string().optional(),
+        name: z.string().optional(),
         disabled: z.boolean().optional(),
         checked: z.boolean().optional(),
-        values: z.array(z.string()).optional(),
+        value: z.string().optional(),
         options: z.array(optionSchema).optional(),
         direction: z.enum(["column", "row"]).optional(),
         class: z.string().optional(),
@@ -28,14 +28,19 @@
   const {
     props = $bindable({
       label: "",
+      name: "radio",
       disabled: false,
       checked: false,
-      values: [],
+      value: "option",
       options: [],
       direction: "column",
       class: "",
     }),
   } = $props();
+
+  const onChange = event => {
+    props.checked = !!event.currentTarget?.checked;
+  };
 </script>
 
 {#if (props.options || []).length > 0}
@@ -47,11 +52,11 @@
       {#each props.options || [] as option}
         <label class="label cursor-pointer justify-start gap-3">
           <input
-            type="checkbox"
-            class="checkbox"
+            type="radio"
+            class="radio"
             disabled={props.disabled}
             value={option.value}
-            bind:group={props.values} />
+            bind:group={props.value} />
           <span class="label-text">{option.label}</span>
         </label>
       {/each}
@@ -60,10 +65,13 @@
 {:else}
   <label class={["label cursor-pointer pt-4 justify-start gap-3", props.class]}>
     <input
-      type="checkbox"
-      class="checkbox"
+      type="radio"
+      class="radio"
+      name={props.name || "radio"}
       disabled={props.disabled}
-      bind:checked={props.checked} />
+      value={props.value}
+      checked={props.checked}
+      onchange={onChange} />
     <span class="label-text">{props.label}</span>
   </label>
 {/if}

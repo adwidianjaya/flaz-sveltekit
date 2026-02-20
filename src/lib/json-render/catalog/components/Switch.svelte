@@ -3,7 +3,7 @@
 
   export const spec = {
     description: "Toggle switch for boolean values.",
-    tags: ["Form"],
+    tags: ["Input"],
     props: z
       .object({
         label: z.string().optional(),

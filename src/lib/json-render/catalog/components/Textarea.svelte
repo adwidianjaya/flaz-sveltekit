@@ -3,7 +3,7 @@
 
   export const spec = {
     description: "Multiline text input.",
-    tags: ["Form"],
+    tags: ["Input"],
     props: z
       .object({
         label: z.string().optional(),
