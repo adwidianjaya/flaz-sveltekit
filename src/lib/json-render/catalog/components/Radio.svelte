@@ -38,17 +38,43 @@
     }),
   } = $props();
 
+  let selectedValue = $state(props.value);
+
+  $effect(() => {
+    if (props.value !== undefined && props.value !== selectedValue) {
+      selectedValue = props.value;
+    }
+  });
+
+  const onOptionChange = value => {
+    selectedValue = value;
+    props.value = value;
+    props.checked = true;
+  };
+
   const onChange = event => {
-    props.checked = !!event.currentTarget?.checked;
+    const checked = !!event.currentTarget?.checked;
+    props.checked = checked;
+    if (checked) {
+      const value = event.currentTarget?.value;
+      selectedValue = value;
+      props.value = value;
+    }
   };
 </script>
 
 {#if (props.options || []).length > 0}
   <div class={props.class}>
     {#if props.label}
-      <div class="label py-1"><span class="label-text">{props.label}</span></div>
+      <div class="label py-1"
+        ><span class="label-text">{props.label}</span></div>
     {/if}
-    <div class={["flex gap-3", props.direction === "row" && "flex-row", (!props.direction || props.direction === "column") && "flex-col"]}>
+    <div
+      class={[
+        "flex gap-3",
+        props.direction === "row" && "flex-row",
+        (!props.direction || props.direction === "column") && "flex-col",
+      ]}>
       {#each props.options || [] as option}
         <label class="label cursor-pointer justify-start gap-3">
           <input
@@ -56,7 +82,8 @@
             class="radio"
             disabled={props.disabled}
             value={option.value}
-            bind:group={props.value} />
+            checked={selectedValue === option.value}
+            onchange={() => onOptionChange(option.value)} />
           <span class="label-text">{option.label}</span>
         </label>
       {/each}
