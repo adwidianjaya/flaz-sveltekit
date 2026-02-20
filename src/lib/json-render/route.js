@@ -75,16 +75,16 @@ const handleRequest = async ({ request }) => {
         const encoder = new TextEncoder();
 
         const result = streamText({
-          // model: google("gemini-3-flash-preview"),
-          // providerOptions: {
-          //   google: {
-          //     thinkingConfig: {
-          //       thinkingBudget: 0,
-          //     },
-          //   },
-          // },
+          model: google("gemini-3-flash-preview"),
+          providerOptions: {
+            google: {
+              thinkingConfig: {
+                thinkingBudget: 0,
+              },
+            },
+          },
 
-          model: anthropic("claude-haiku-4-5-20251001"),
+          // model: anthropic("claude-haiku-4-5-20251001"),
 
           // model: openai("gpt-5.1-codex-mini"),
           // model: xai("grok-4-1-fast-non-reasoning"),

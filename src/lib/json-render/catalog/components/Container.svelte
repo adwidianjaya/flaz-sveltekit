@@ -2,13 +2,21 @@
   import { z } from "zod";
 
   export const spec = {
-    description: "Flex container for layouts.",
+    description: "Container for flex or grid layouts.",
     tags: ["Layout"],
     props: z
       .object({
-        direction: z.enum(["row", "column"]).optional().default("row"),
+        layout: z.enum(["flex", "grid"]).optional().default("flex"),
+        direction: z
+          .enum(["row", "row-reverse", "column", "col-reverse"])
+          .optional()
+          .default("row"),
+        columns: z.enum(["1", "2", "3", "4", "5", "6"]).optional().default("1"),
         gap: z.enum(["0", "2", "4", "6"]).optional().default("0"),
-        align: z.enum(["start", "center", "end", "stretch"]).optional().default("start"),
+        align: z
+          .enum(["start", "center", "end", "stretch"])
+          .optional()
+          .default("stretch"),
         justify: z
           .enum([
             "start",
@@ -21,7 +29,7 @@
             "normal",
           ])
           .optional()
-          .default("start"),
+          .default("stretch"),
         class: z.string().optional(),
       })
       .toJSONSchema(),
@@ -32,10 +40,12 @@
 <script>
   const {
     props = $bindable({
+      layout: "flex",
       direction: "row",
+      columns: "1",
       gap: "0",
-      align: "start",
-      justify: "start",
+      align: "stretch",
+      justify: "stretch",
       class: "",
     }),
     children,
@@ -44,9 +54,18 @@
 
 <div
   class={[
-    "flex",
-    props.direction === "row" && "flex-row",
-    props.direction === "column" && "flex-col",
+    props.layout === "flex" && "flex",
+    props.layout === "grid" && "grid",
+    props.layout === "flex" && props.direction === "row" && "flex-row",
+    props.layout === "flex" && props.direction === "row-reverse" && "flex-row-reverse",
+    props.layout === "flex" && props.direction === "column" && "flex-col",
+    props.layout === "flex" && props.direction === "col-reverse" && "flex-col-reverse",
+    props.layout === "grid" && props.columns === "1" && "grid-cols-1",
+    props.layout === "grid" && props.columns === "2" && "grid-cols-2",
+    props.layout === "grid" && props.columns === "3" && "grid-cols-3",
+    props.layout === "grid" && props.columns === "4" && "grid-cols-4",
+    props.layout === "grid" && props.columns === "5" && "grid-cols-5",
+    props.layout === "grid" && props.columns === "6" && "grid-cols-6",
     props.gap === "0" && `gap-0`,
     props.gap === "2" && `gap-2`,
     props.gap === "4" && `gap-4`,

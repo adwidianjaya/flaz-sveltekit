@@ -51,27 +51,31 @@
         (!props.direction || props.direction === "column") && "flex-col",
       ]}>
       {#each props.options || [] as option}
-        <label class="label cursor-pointer justify-start items-center gap-3">
+        <label
+          class="label cursor-pointer justify-start items-center gap-3 min-w-0">
           <input
             type="checkbox"
             class="checkbox"
             disabled={props.disabled}
             value={option.value}
             bind:group={props.values} />
-          <span class="label-text">{option.label}</span>
+          <span class="label-text whitespace-normal wrap-break-word"
+            >{option.label}</span>
         </label>
       {/each}
     </div>
   </div>
 {:else}
   <div class={props.class}>
-    <label class="label cursor-pointer justify-start items-center gap-3">
+    <label
+      class="label cursor-pointer justify-start items-center gap-3 min-w-0">
       <input
         type="checkbox"
         class="checkbox"
         disabled={props.disabled}
         bind:checked={props.checked} />
-      <span class="label-text">{props.label}</span>
+      <span class="label-text whitespace-normal wrap-break-word"
+        >{props.label}</span>
     </label>
   </div>
 {/if}
