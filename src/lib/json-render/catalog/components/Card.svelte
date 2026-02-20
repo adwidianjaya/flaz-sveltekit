@@ -42,7 +42,7 @@
 
 <div
   class={[
-    "px-4 pt-4 pb-4 rounded border border-gray-600 bg-gray-700",
+    "px-4 pt-4 pb-4 rounded border border-gray-100 bg-white shadow-sm",
     props.maxWidth === "sm" && "max-w-sm",
     props.maxWidth === "md" && "max-w-md",
     props.maxWidth === "lg" && "max-w-lg",
@@ -56,7 +56,7 @@
     <div class="text-lg pt-1">{props.title}</div>
   {/if}
   {#if props.description}
-    <div class="text-sm text-gray-200">
+    <div class="text-sm">
       {props.description}
     </div>
   {/if}

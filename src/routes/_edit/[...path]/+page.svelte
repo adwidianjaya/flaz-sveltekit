@@ -137,7 +137,7 @@
 </svelte:head>
 
 <div class="flex flex-col w-full h-dvh">
-  <div class="w-full italic font-semibold py-3 px-4">
+  <div class="w-full italic font-semibold py-3 px-4 bg-slate-200">
     <img
       src={logo}
       alt="Flaz Logo"
@@ -146,7 +146,7 @@
   </div>
 
   <div class="flex flex-1 overflow-hidden">
-    <div class={["w-1/4 flex flex-col", "border-b border-t border-gray-700"]}>
+    <div class={["w-1/4 flex flex-col", "border-b border-t border-gray-200"]}>
       <SchemaViewer {schema} />
 
       <PromptInput bind:prompt {handleSendPrompt} {loading} />
@@ -154,12 +154,12 @@
 
     <div
       class={[
-        "w-3/4 flex flex-col",
-        "border-b border-t border-l border-gray-700",
+        "w-3/4 flex flex-col bg-slate-50",
+        "border-b border-t border-l border-gray-200",
       ]}>
       <div class="w-full h-full text-xs overflow-scroll">
         <div
-          class="sticky top-0 z-10 bg-gray-600 px-2 py-1 mb-1 text-xs text-gray-400">
+          class="sticky top-0 z-10 bg-gray-600 text-white px-2 py-1 mb-1 text-xs">
           Preview
         </div>
         <div class="px-3 py-2">
