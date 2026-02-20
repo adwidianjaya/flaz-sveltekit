@@ -1,19 +1,34 @@
-import { set, get, isString, isArray, isObject } from "lodash-es";
+import { set, isString } from "lodash-es";
 import { SimpleTemplatingEngine } from "./template-engine.js";
 
 export function createReactiveProps(
   elementProps,
   states,
+  propsSchema = {},
   options = {
     forceReloadBindingPath: process.env.NODE_ENV !== "production",
   },
 ) {
   const reactiveProps = {};
 
+  const properties = propsSchema?.properties || {};
+  const defaults = {};
+
+  for (const key in properties) {
+    const schema = properties[key];
+    if (Object.prototype.hasOwnProperty.call(schema || {}, "default")) {
+      defaults[key] = schema.default;
+    }
+  }
+
   // Cache binding paths to avoid re-calculating regex matches on every effect run.
   const bindingPaths = new Map();
+  const reactiveKeys = new Set([
+    ...Object.keys(defaults),
+    ...Object.keys(elementProps || {}),
+  ]);
 
-  for (const reactiveKey in elementProps) {
+  for (const reactiveKey of reactiveKeys) {
     // 1. Determine and cache the binding path if it's a string binding.
     let bindingPath = bindingPaths.get(reactiveKey);
     if (
@@ -38,8 +53,16 @@ export function createReactiveProps(
       get: function () {
         // Compute the current value for the reactive property.
         let newValue;
-
-        let propValue = elementProps[reactiveKey] ?? "";
+        const hasProp = Object.prototype.hasOwnProperty.call(
+          elementProps || {},
+          reactiveKey,
+        );
+        let propValue = hasProp
+          ? elementProps[reactiveKey]
+          : defaults[reactiveKey];
+        if (propValue === undefined) {
+          propValue = "";
+        }
         if (isString(propValue)) {
           try {
             newValue = SimpleTemplatingEngine.render(propValue, states || {});

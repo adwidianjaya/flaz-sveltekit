@@ -1,20 +1,26 @@
 <script>
   import Element from "./Element.svelte";
-  import { componentModules } from "./catalog/component-modules.svelte.js";
+  import {
+    componentModules,
+    componentSpecs,
+  } from "./catalog/component-modules.svelte.js";
   import { createReactiveProps } from "./reactive-props.svelte";
 
   let { element = {}, states = $bindable({}) } = $props();
   // $inspect("...states", states);
 
-  const Component = $derived(
-    componentModules[
-      `/src/lib/json-render/catalog/components/${element?.type}.svelte`
-    ],
+  const componentPath = $derived(
+    `/src/lib/json-render/catalog/components/${element?.type}.svelte`,
   );
+  const Component = $derived(componentModules[componentPath]);
+  const componentSpec = $derived(componentSpecs[componentPath]);
   let reactiveProps = $derived.by(() =>
-    createReactiveProps(element?.props || {}, states),
+    createReactiveProps(
+      element?.props || {},
+      states,
+      componentSpec?.props || {},
+    ),
   );
-  // $inspect("...reactiveProps", reactiveProps);
 </script>
 
 {#snippet renderChildren()}

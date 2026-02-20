@@ -3,8 +3,8 @@ import { getRequestEvent, query, command, prerender } from "$app/server";
 import { pageTable } from "$lib/db/schema";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 const DEFAULT_PAGE = {
   definition: {
@@ -27,7 +27,7 @@ const resolvePath = () => {
   return path;
 };
 
-export const loadCurrentPage = prerender(async () => {
+export const loadCurrentPage = query(async () => {
   const { locals } = getRequestEvent();
   const currentPath = resolvePath();
 

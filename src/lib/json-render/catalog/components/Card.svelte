@@ -33,6 +33,7 @@
     }),
     children,
   } = $props();
+  // $inspect("...props", props);
 </script>
 
 <div
@@ -63,7 +64,7 @@
   {/if}
   <div
     class={[
-      !props.layout && "flex flex-col",
+      props.layout === "stack" && "flex flex-col",
       props.layout === "grid" && "grid",
       props.layout === "grid" && props.columns === "1" && "grid-cols-1",
       props.layout === "grid" && props.columns === "2" && "grid-cols-2",
