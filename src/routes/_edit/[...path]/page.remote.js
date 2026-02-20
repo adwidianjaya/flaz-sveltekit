@@ -102,10 +102,10 @@ export const saveDefinition = command(
         .from(pageTable)
         .where(eq(pageTable.path, currentPath));
       let currentPage = pages[0];
-      console.log({
-        currentPage,
-        currentPath,
-      });
+      // console.log({
+      //   currentPage,
+      //   currentPath,
+      // });
 
       const fileName = ("root" + currentPath.split("/").join(".") + ".json")
         .split("..")

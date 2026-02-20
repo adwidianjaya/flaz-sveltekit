@@ -36,7 +36,12 @@ export const updateDefinitionByOperationString = ({
   }
 
   if (operation.path.startsWith("$states")) {
-    const path = operation.path.split("$states.").join("").trim();
+    const path = operation.path
+      .split("$states.")
+      .join("")
+      .trim()
+      .split("/")
+      .join(".");
     // console.log({ path });
     if (path === "$states") {
       if (operation.op === "remove") {
@@ -55,13 +60,18 @@ export const updateDefinitionByOperationString = ({
       }
     }
   } else if (operation.path.startsWith("$elements")) {
-    const path = operation.path.split("$elements.").join("");
+    const path = operation.path
+      .split("$elements.")
+      .join("")
+      .split("/")
+      .join(".");
     if (path === "$elements") {
       definition.elements = {};
     } else {
       if (operation.op === "remove") {
         delete definition.elements[path];
       } else if (operation.op === "replace") {
+        console.log("...replace", path, operation.value);
         set(definition.elements, path, operation.value);
       } else if (operation.op === "add") {
         const elementId = path;

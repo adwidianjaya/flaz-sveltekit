@@ -48,6 +48,12 @@ const handleRequest = async ({ request }) => {
   systemPromptLines.push(`You can only use the following components:`);
   // systemPromptLines.push(JSON.stringify(catalog.components, null, 2));
   systemPromptLines.push(toonEncode(catalog.components));
+  systemPromptLines.push(
+    `\nPrioritize native component props for customizing. Manually adding class names must be avoided until necessary.`,
+  );
+
+  systemPromptLines.push(`\nHere is current elements and states:`);
+  systemPromptLines.push(toonEncode(context));
 
   systemPromptLines.push(
     `Response with JSONL format only. Avoid any markdown formatting.`,
@@ -59,14 +65,14 @@ const handleRequest = async ({ request }) => {
   systemPromptLines.push(`{"op":"remove","path":"...","value": ...}`);
 
   systemPromptLines.push(
-    `\nHere are examples for $states path (for state definition):`,
+    `\nHere are examples for $states path (for state operation):`,
   );
   systemPromptLines.push(
     JSON.stringify({ op: "add", path: "$states.form.email", value: "" }),
   );
 
   systemPromptLines.push(
-    `\nHere are examples for $elements path (for visual definition and state binding):`,
+    `\nHere are examples for $elements path (for visual operation and state binding):`,
   );
   systemPromptLines.push(
     JSON.stringify({ op: "add", path: "$root", value: "login-container" }),
@@ -133,11 +139,14 @@ const handleRequest = async ({ request }) => {
   );
 
   systemPromptLines.push(
+    `Build nested path start from top level paths: $root, $states, and $elements.`,
+  );
+  systemPromptLines.push(
+    `Avoid pathing with slashes, and always use dot notation for nested paths.`,
+  );
+  systemPromptLines.push(
     `\nAlways produce operation on $root path for first response.`,
   );
-
-  systemPromptLines.push(`\nHere is current elements and states:`);
-  systemPromptLines.push(toonEncode(context));
 
   console.log("...system", color.cyan(systemPromptLines.join("\n")), "\n");
   // return new Response(prompt);

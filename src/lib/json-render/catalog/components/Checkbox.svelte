@@ -41,11 +41,16 @@
 {#if (props.options || []).length > 0}
   <div class={["pt-4", props.class]}>
     {#if props.label}
-      <div class="label py-1"><span class="label-text">{props.label}</span></div>
+      <div class="label py-1"
+        ><span class="label-text">{props.label}</span></div>
     {/if}
-    <div class={["flex gap-3", props.direction === "row" ? "flex-row" : "flex-col"]}>
+    <div
+      class={[
+        "flex gap-3",
+        props.direction === "row" ? "flex-row" : "flex-col",
+      ]}>
       {#each props.options || [] as option}
-        <label class="label cursor-pointer justify-start gap-3">
+        <label class="label cursor-pointer justify-start items-center gap-3">
           <input
             type="checkbox"
             class="checkbox"
@@ -58,7 +63,11 @@
     </div>
   </div>
 {:else}
-  <label class={["label cursor-pointer pt-4 justify-start gap-3", props.class]}>
+  <label
+    class={[
+      "label cursor-pointer pt-4 justify-start items-center gap-3",
+      props.class,
+    ]}>
     <input
       type="checkbox"
       class="checkbox"
