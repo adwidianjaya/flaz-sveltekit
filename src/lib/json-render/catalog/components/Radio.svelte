@@ -12,12 +12,12 @@
     props: z
       .object({
         label: z.string().optional(),
-        name: z.string().optional(),
+        name: z.string().optional().default("radio"),
         disabled: z.boolean().optional(),
         checked: z.boolean().optional(),
-        value: z.string().optional(),
-        options: z.array(optionSchema).optional(),
-        direction: z.enum(["column", "row"]).optional(),
+        value: z.string().optional().default("option"),
+        options: z.array(optionSchema).optional().default([]),
+        direction: z.enum(["column", "row"]).optional().default("column"),
         class: z.string().optional(),
       })
       .toJSONSchema(),

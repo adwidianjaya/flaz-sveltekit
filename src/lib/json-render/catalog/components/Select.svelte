@@ -14,8 +14,8 @@
         label: z.string().optional(),
         disabled: z.boolean().optional(),
         value: z.string().optional(),
-        placeholder: z.string().optional(),
-        options: z.array(optionSchema).optional(),
+        placeholder: z.string().optional().default("Select one"),
+        options: z.array(optionSchema).optional().default([]),
         class: z.string().optional(),
       })
       .toJSONSchema(),

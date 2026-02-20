@@ -7,7 +7,7 @@
     props: z
       .object({
         label: z.string().optional(),
-        style: z.enum(["solid", "dashed", "dotted"]).optional(),
+        style: z.enum(["solid", "dashed", "dotted"]).optional().default("solid"),
         class: z.string().optional(),
       })
       .toJSONSchema(),

@@ -13,11 +13,11 @@
     props: z
       .object({
         label: z.string().optional(),
-        name: z.string().optional(),
+        name: z.string().optional().default("filter"),
         disabled: z.boolean().optional(),
-        values: z.array(z.string()).optional(),
-        options: z.array(optionSchema).optional(),
-        resetLabel: z.string().optional(),
+        values: z.array(z.string()).optional().default([]),
+        options: z.array(optionSchema).optional().default([]),
+        resetLabel: z.string().optional().default("×"),
         class: z.string().optional(),
       })
       .toJSONSchema(),

@@ -8,7 +8,7 @@
       .object({
         text: z.string().optional(),
         href: z.string().optional(),
-        target: z.enum(["_self", "_blank"]).optional(),
+        target: z.enum(["_self", "_blank"]).optional().default("_self"),
         rel: z.string().optional(),
         class: z.string().optional(),
       })

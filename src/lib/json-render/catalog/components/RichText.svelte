@@ -8,7 +8,7 @@
     props: z
       .object({
         content: z.string().optional(),
-        format: z.enum(["plain", "markdown", "html"]).optional(),
+        format: z.enum(["plain", "markdown", "html"]).optional().default("plain"),
         class: z.string().optional(),
       })
       .toJSONSchema(),

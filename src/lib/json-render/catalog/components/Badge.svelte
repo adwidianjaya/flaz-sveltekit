@@ -7,8 +7,11 @@
     props: z
       .object({
         text: z.string().optional(),
-        tone: z.enum(["neutral", "info", "success", "warning", "error"]).optional(),
-        size: z.enum(["xs", "sm", "md", "lg"]).optional(),
+        tone: z
+          .enum(["neutral", "info", "success", "warning", "error"])
+          .optional()
+          .default("neutral"),
+        size: z.enum(["xs", "sm", "md", "lg"]).optional().default("md"),
         class: z.string().optional(),
       })
       .toJSONSchema(),

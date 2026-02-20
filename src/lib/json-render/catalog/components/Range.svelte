@@ -8,10 +8,10 @@
       .object({
         label: z.string().optional(),
         disabled: z.boolean().optional(),
-        value: z.number().optional(),
-        min: z.number().optional(),
-        max: z.number().optional(),
-        step: z.number().optional(),
+        value: z.number().optional().default(50),
+        min: z.number().optional().default(0),
+        max: z.number().optional().default(100),
+        step: z.number().optional().default(1),
         class: z.string().optional(),
       })
       .toJSONSchema(),

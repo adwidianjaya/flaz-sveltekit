@@ -24,8 +24,9 @@
             "time",
             "multiline",
           ])
-          .optional(),
-        rows: z.number().int().min(2).optional(),
+          .optional()
+          .default("text"),
+        rows: z.number().int().min(2).optional().default(2),
         class: z.string().optional(),
       })
       .toJSONSchema(),

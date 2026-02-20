@@ -13,9 +13,9 @@
       .object({
         label: z.string().optional(),
         disabled: z.boolean().optional(),
-        values: z.array(z.string()).optional(),
-        options: z.array(optionSchema).optional(),
-        size: z.number().int().min(2).optional(),
+        values: z.array(z.string()).optional().default([]),
+        options: z.array(optionSchema).optional().default([]),
+        size: z.number().int().min(2).optional().default(4),
         class: z.string().optional(),
       })
       .toJSONSchema(),

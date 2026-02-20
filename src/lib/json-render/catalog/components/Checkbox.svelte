@@ -15,9 +15,9 @@
         label: z.string().optional(),
         disabled: z.boolean().optional(),
         checked: z.boolean().optional(),
-        values: z.array(z.string()).optional(),
-        options: z.array(optionSchema).optional(),
-        direction: z.enum(["column", "row"]).optional(),
+        values: z.array(z.string()).optional().default([]),
+        options: z.array(optionSchema).optional().default([]),
+        direction: z.enum(["column", "row"]).optional().default("column"),
         class: z.string().optional(),
       })
       .toJSONSchema(),

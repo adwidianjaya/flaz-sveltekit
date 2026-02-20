@@ -10,7 +10,7 @@
         disabled: z.boolean().optional(),
         multiple: z.boolean().optional(),
         accept: z.string().optional(),
-        files: z.any().optional(),
+        files: z.any().optional().default(null),
         class: z.string().optional(),
       })
       .toJSONSchema(),

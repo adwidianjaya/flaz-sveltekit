@@ -8,10 +8,10 @@
       .object({
         label: z.string().optional(),
         disabled: z.boolean().optional(),
-        value: z.number().optional(),
-        max: z.number().int().min(1).optional(),
-        allowClear: z.boolean().optional(),
-        maskClass: z.string().optional(),
+        value: z.number().optional().default(0),
+        max: z.number().int().min(1).optional().default(5),
+        allowClear: z.boolean().optional().default(true),
+        maskClass: z.string().optional().default("mask-star-2 bg-orange-400"),
         class: z.string().optional(),
       })
       .toJSONSchema(),

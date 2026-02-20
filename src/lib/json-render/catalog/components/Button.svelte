@@ -20,7 +20,7 @@
     props = $bindable({
       label: "",
       disabled: false,
-      onclick,
+      class: "",
     }),
   } = $props();
 </script>

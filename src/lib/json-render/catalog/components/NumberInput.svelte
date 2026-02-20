@@ -12,7 +12,7 @@
         value: z.number().optional(),
         min: z.number().optional(),
         max: z.number().optional(),
-        step: z.number().optional(),
+        step: z.number().optional().default(1),
         class: z.string().optional(),
       })
       .toJSONSchema(),

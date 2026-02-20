@@ -10,7 +10,7 @@
         disabled: z.boolean().optional(),
         checked: z.boolean().optional(),
         indeterminate: z.boolean().optional(),
-        size: z.enum(["xs", "sm", "md", "lg", "xl"]).optional(),
+        size: z.enum(["xs", "sm", "md", "lg", "xl"]).optional().default("md"),
         color: z
           .enum([
             "primary",

@@ -7,7 +7,7 @@
     props: z
       .object({
         text: z.string().optional(),
-        level: z.enum(["h1", "h2", "h3", "h4", "h5", "h6", "p"]).optional(),
+        level: z.enum(["h1", "h2", "h3", "h4", "h5", "h6", "p"]).optional().default("p"),
         class: z.string().optional(),
       })
       .toJSONSchema(),
@@ -18,13 +18,14 @@
   const {
     props = $bindable({
       text: "",
-      level: "",
+      level: "p",
+      class: "",
     }),
   } = $props();
 </script>
 
 <svelte:element
-  this={props.level || "p"}
+  this={props.level}
   class={[
     "mt-2",
     props.level === "h1" && "text-3xl",

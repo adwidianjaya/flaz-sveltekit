@@ -11,7 +11,10 @@
         caption: z.string().optional(),
         width: z.number().int().positive().optional(),
         height: z.number().int().positive().optional(),
-        fit: z.enum(["contain", "cover", "fill", "none", "scale-down"]).optional(),
+        fit: z
+          .enum(["contain", "cover", "fill", "none", "scale-down"])
+          .optional()
+          .default("cover"),
         rounded: z.boolean().optional(),
         class: z.string().optional(),
       })

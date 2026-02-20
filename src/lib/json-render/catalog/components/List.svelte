@@ -14,9 +14,9 @@
     tags: ["Content"],
     props: z
       .object({
-        items: z.array(itemSchema).optional(),
-        type: z.enum(["ul", "ol", "check"]).optional(),
-        marker: z.enum(["disc", "decimal", "none"]).optional(),
+        items: z.array(itemSchema).optional().default([]),
+        type: z.enum(["ul", "ol", "check"]).optional().default("ul"),
+        marker: z.enum(["disc", "decimal", "none"]).optional().default("disc"),
         class: z.string().optional(),
       })
       .toJSONSchema(),

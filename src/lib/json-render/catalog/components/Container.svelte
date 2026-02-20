@@ -6,9 +6,9 @@
     tags: ["Layout"],
     props: z
       .object({
-        direction: z.enum(["row", "column"]),
-        gap: z.enum(["0", "2", "4", "6"]).optional(),
-        align: z.enum(["start", "center", "end", "stretch"]).optional(),
+        direction: z.enum(["row", "column"]).optional().default("row"),
+        gap: z.enum(["0", "2", "4", "6"]).optional().default("0"),
+        align: z.enum(["start", "center", "end", "stretch"]).optional().default("start"),
         justify: z
           .enum([
             "start",
@@ -20,7 +20,8 @@
             "stretch",
             "normal",
           ])
-          .optional(),
+          .optional()
+          .default("start"),
         class: z.string().optional(),
       })
       .toJSONSchema(),
@@ -35,6 +36,7 @@
       gap: "0",
       align: "start",
       justify: "start",
+      class: "",
     }),
     children,
   } = $props();
