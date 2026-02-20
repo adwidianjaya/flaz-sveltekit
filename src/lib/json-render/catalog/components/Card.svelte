@@ -9,7 +9,10 @@
       .object({
         title: z.string().optional(),
         description: z.string().optional(),
-        maxWidth: z.enum(["sm", "md", "lg", "xl", "2xl", "3xl"]).optional().default("md"),
+        maxWidth: z
+          .enum(["sm", "md", "lg", "xl", "2xl", "3xl"])
+          .optional()
+          .default("md"),
         centered: z.boolean().optional(),
         layout: z.enum(["stack", "grid"]).optional().default("stack"),
         gap: z.enum(["0", "2", "4", "6", "8"]).optional().default("4"),
@@ -53,15 +56,9 @@
     <div class="text-lg pt-1">{props.title}</div>
   {/if}
   {#if props.description}
-    <div
-      class={[
-        "text-sm text-gray-200",
-        props.gap === "0" && "pb-0",
-        props.gap === "2" && "pb-2",
-        props.gap === "4" && "pb-4",
-        props.gap === "6" && "pb-6",
-        props.gap === "8" && "pb-8",
-      ]}>{props.description}</div>
+    <div class="text-sm text-gray-200">
+      {props.description}
+    </div>
   {/if}
   <div
     class={[
@@ -71,11 +68,11 @@
       props.layout === "grid" && props.columns === "2" && "grid-cols-2",
       props.layout === "grid" && props.columns === "3" && "grid-cols-3",
       props.layout === "grid" && props.columns === "4" && "grid-cols-4",
-      props.gap === "0" && "gap-0",
-      props.gap === "2" && "gap-2",
-      props.gap === "4" && "gap-4",
-      props.gap === "6" && "gap-6",
-      props.gap === "8" && "gap-8",
+      props.gap === "0" && "gap-0 pt-0",
+      props.gap === "2" && "gap-2 pt-2",
+      props.gap === "4" && "gap-4 pt-4",
+      props.gap === "6" && "gap-6 pt-6",
+      props.gap === "8" && "gap-8 pt-8",
     ]}>
     {@render children?.()}
   </div>
