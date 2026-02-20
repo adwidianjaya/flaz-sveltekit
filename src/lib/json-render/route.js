@@ -75,7 +75,7 @@ const handleRequest = async ({ request }) => {
         const encoder = new TextEncoder();
 
         const result = streamText({
-          model: google("gemini-3-flash-preview"),
+          model: google("gemini-3-flash"),
           providerOptions: {
             google: {
               thinkingConfig: {
