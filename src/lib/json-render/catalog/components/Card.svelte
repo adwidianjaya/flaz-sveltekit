@@ -9,6 +9,7 @@
       .object({
         title: z.string().optional(),
         description: z.string().optional(),
+        width: z.union([z.number().positive(), z.string()]).optional(),
         maxWidth: z
           .enum(["sm", "md", "lg", "xl", "2xl", "3xl"])
           .optional()
@@ -28,6 +29,7 @@
     props = $bindable({
       title: "",
       description: "",
+      width: undefined,
       maxWidth: "md",
       centered: false,
       layout: "stack",
@@ -37,10 +39,15 @@
     }),
     children,
   } = $props();
+  const widthStyle =
+    props.width !== undefined
+      ? `width: ${typeof props.width === "number" ? `${props.width}px` : props.width};`
+      : undefined;
   // $inspect("...props", props);
 </script>
 
 <div
+  style={widthStyle}
   class={[
     "px-4 pt-4 pb-4 rounded border border-gray-100 bg-white shadow-sm min-w-0 overflow-hidden",
     props.maxWidth === "sm" && "max-w-sm",
