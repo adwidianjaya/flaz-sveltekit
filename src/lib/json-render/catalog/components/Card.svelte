@@ -42,7 +42,7 @@
 
 <div
   class={[
-    "px-4 pt-4 pb-4 rounded border border-gray-100 bg-white shadow-sm",
+    "px-4 pt-4 pb-4 rounded border border-gray-100 bg-white shadow-sm min-w-0 overflow-hidden",
     props.maxWidth === "sm" && "max-w-sm",
     props.maxWidth === "md" && "max-w-md",
     props.maxWidth === "lg" && "max-w-lg",
