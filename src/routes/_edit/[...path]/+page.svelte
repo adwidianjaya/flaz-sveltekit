@@ -10,10 +10,16 @@
   import SchemaViewer from "./SchemaViewer.svelte";
   import PromptInput from "./PromptInput.svelte";
   import { schema as schemaMocked } from "./mock";
+  import InlineEdit from "$lib/components/form/InlineEdit.svelte";
 
-  import { loadCurrentPage, loadPages, saveDefinition } from "./page.remote.js";
+  import { loadCurrentPage, saveDefinition } from "./page.remote.js";
 
   let currentPage = loadCurrentPage();
+  const pageTitle = $derived.by(() => {
+    if (currentPage.loading) return "Flaz";
+    const name = String(currentPage.current?.name || "").trim();
+    return name ? `Flaz | ${name}` : "Flaz";
+  });
 
   let definition = $state(initDefinition());
   $effect(() => {
@@ -21,6 +27,13 @@
       return;
     }
     definition = currentPage.current.definition;
+  });
+  let pageName = $state("");
+  $effect(() => {
+    if (currentPage.loading) {
+      return;
+    }
+    pageName = String(currentPage.current?.name || "");
   });
   let schema = $state({
     elements: [],
@@ -44,6 +57,16 @@
   // $inspect("...prompt", prompt);
 
   let loading = $state(false);
+  let savingName = $state(false);
+
+  const saveCurrentPage = async () => {
+    await saveDefinition({
+      definition,
+      name: pageName.trim(),
+    });
+    await currentPage.refresh?.();
+  };
+
   const handleSendPrompt = async () => {
     loading = true;
 
@@ -122,26 +145,65 @@
         lastLine = "";
       }
 
-      await saveDefinition({ definition });
+      await saveCurrentPage();
     } catch (err) {
       console.warn(err);
     }
 
     loading = false;
   };
+
+  const handleSaveName = async () => {
+    if (savingName || currentPage.loading) {
+      return;
+    }
+
+    savingName = true;
+    try {
+      await saveCurrentPage();
+    } catch (err) {
+      console.warn(err);
+    }
+    savingName = false;
+  };
 </script>
 
 <svelte:head>
-  <title>Flaz</title>
+  <title>{pageTitle}</title>
 </svelte:head>
 
 <div class="flex flex-col w-full h-dvh">
-  <div class="w-full italic font-semibold py-3 px-4 bg-slate-200">
-    <img
-      src={logo}
-      alt="Flaz Logo"
-      class="h-8 w-auto inline-block rounded-lg overflow-hidden" />
-    &nbsp; Flaz
+  <div
+    class="w-full py-3 px-4 bg-slate-200 flex items-center justify-between gap-4">
+    <div class="italic font-semibold flex items-center">
+      <img
+        src={logo}
+        alt="Flaz Logo"
+        class="h-8 w-auto inline-block rounded-lg overflow-hidden" />
+      &nbsp; Flaz
+    </div>
+
+    <div class="pb-1">
+      <InlineEdit
+        bind:value={pageName}
+        placeholder="Page name"
+        saveText="Save"
+        emptyLabel="Untitled page"
+        saving={savingName}
+        disabled={currentPage.loading || loading}
+        onSave={handleSaveName}>
+        <span class="text-xs text-slate-700">
+          Name:
+          <span class={pageName ? "font-semibold text-slate-900" : "italic"}>
+            {pageName || "Untitled page"}
+          </span>
+        </span>
+      </InlineEdit>
+      &nbsp;
+      <span class="text-xs text-gray-700 whitespace-nowrap">
+        Path: <code>{currentPage.current?.path || "/"}</code>
+      </span>
+    </div>
   </div>
 
   <div class="flex flex-1 overflow-hidden">

@@ -1,4 +1,4 @@
-import { error, fail } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import { getRequestEvent, query, command, prerender } from "$app/server";
 import { pageTable } from "$lib/db/schema";
 import { z } from "zod";
@@ -39,7 +39,7 @@ export const loadCurrentPage = query(async () => {
 
   // console.log("...pages", pages, currentPage);
   return {
-    // pages,
+    path: currentPath,
     ...currentPage,
   };
 });
@@ -76,17 +76,19 @@ export const saveDefinition = command(
   z
     .object({
       definition: z.json(),
+      name: z.string().trim().optional(),
     })
     .toJSONSchema(),
-  async ({ definition }) => {
+  async ({ definition, name }) => {
     try {
       const { locals } = getRequestEvent();
       const currentPath = resolvePath();
+      const normalizedName = name === undefined ? undefined : name.trim();
 
       await locals.db
         .insert(pageTable)
         .values({
-          name: "",
+          name: normalizedName ?? "",
           path: currentPath,
           definition,
         })
@@ -94,6 +96,7 @@ export const saveDefinition = command(
           target: [pageTable.path],
           set: {
             definition,
+            ...(normalizedName !== undefined ? { name: normalizedName } : {}),
           },
         });
 
